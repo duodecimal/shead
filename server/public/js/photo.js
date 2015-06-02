@@ -15,70 +15,86 @@ angular.module('myApp')
     var uploadForm = document.getElementById('js-upload-form');
     var exif_data;
     var files;
+    var listOfEXIF = [];
+    $scope.percent = 0;
+
     document.getElementById("js-upload-files").onchange = function(e) {
         files = e.target.files;
         //console.log(files);
-        handleFile(files);
+        //handleFile(files);	
         //uploadImg(files);
+        for (var i = 0; i < files.length; i++) {
+		    handleFile(files[i], i);
+		}
     }
 
-	var handleFile = function (event) {
-	    var files, reader;
 
-	    files = event;
-	    reader = new FileReader();
-	    reader.onload = function (event) {
-			var exif, tags, tableBody, name, row;
 
-			try {
-				exif = new ExifReader();
 
+	function handleFile(file, i) {
+	    var reader = new FileReader();  
+	    var exif;
+	    reader.onload = function(e) {  
+	       try {
+		        // get file content  
+		        var text = e.target.result; 
+		        //console.log(text);
+
+		        exif = new ExifReader();
 				// Parse the Exif tags.
-				exif.load(event.target.result);
+				exif.load(e.target.result);
+
 				// Or, with jDataView you would use this:
 				//exif.loadView(new jDataView(event.target.result));
 
 				// The MakerNote tag can be really large. Remove it to lower memory usage.
 				exif.deleteTag('MakerNote');
-
-				// Output the tags on the page.
-				tags = exif.getAllTags();
-				exif_data = tags;
-				//console.log(exif_data);
-				tableBody = document.getElementById('exif-table-body');
-				for (name in tags) {
-					if (tags.hasOwnProperty(name)) {
-						row = document.createElement('tr');
-						row.innerHTML = '<td>' + name + '</td><td>' + tags[name].description + '</td>';
-						tableBody.appendChild(row);
-					}
-				}
+				exif_data = exif.getAllTags();
+				console.log(exif_data);
+				listOfEXIF.push(exif_data);
+				showDataInTable(exif_data);
 			} catch (error) {
 				alert(error);
 			}
-	    };
-	    // We only need the start of the file for the Exif info.
-	    reader.readAsArrayBuffer(files[0].slice(0, 128 * 1024));
-	  };
+	    }
+	    //reader.readAsText(file, "UTF-8");
+
+    	reader.readAsArrayBuffer(files[i].slice(0, 128 * 1024));	
+
+	}
+
+	
+	showDataInTable = function(tags){
+		var tableBody, name, row;
+		tableBody = document.getElementById('exif-table-body');
+		for (name in tags) {
+			if (tags.hasOwnProperty(name)) {
+				row = document.createElement('tr');
+				row.innerHTML = '<td>' + name + '</td><td>' + tags[name].description + '</td>';
+				tableBody.appendChild(row);
+			}
+		}
+	}
 
     $scope.submitPhoto = function(){
     	
 		//console.log(files);
-    	var JSONObjFinal = findExif(exif_data);
-    	if(JSONObjFinal != null){
-   			$http.post('http://shead.cloudapp.net:3000/api/ImageMetadatas', JSONObjFinal)
-			.success(function(data, status, headers, config) {
-			    console.log("Status : " + status + ", save metadata complete!");
-			    //console.log(data);
-			    uploadImg(files, data.id);
-			})
-			.error(function(data, status, headers, config) {
+    	//var JSONObjFinal = findExif(exif_data);
+    	console.log(listOfEXIF);
+   //  	if(JSONObjFinal != null){
+   // 			$http.post('http://shead.cloudapp.net:3000/api/ImageMetadatas', JSONObjFinal)
+			// .success(function(data, status, headers, config) {
+			//     console.log("Status : " + status + ", save metadata complete!");
+			//     //console.log(data);
+			//     uploadImg(files, data.id);
+			// })
+			// .error(function(data, status, headers, config) {
 			    
-			});	
-    	}
-    	else{
-    		console.log("No GPS data or not select file.");
-    	}    
+			// });	
+   //  	}
+   //  	else{
+   //  		console.log("No GPS data or not select file.");
+   //  	}    
 	}
     
     dropZone.ondrop = function(e) {
@@ -102,30 +118,7 @@ angular.module('myApp')
   		$location.path(path);
 	};
 
-	// 	// In your main controller
-	// $rootScope.$on('animStart', function($event, element, speed) {
-	//     // do something
-	// });
-
-	// $rootScope.$on('animEnd', function($event, element, speed) {
-	//     // do something
-	// });
-
-
-	// // In your state controllers
-	// $scope.$on('animIn', function($event, element, speed) {
-	//     // do something
-	// });
-
-	// // BROKEN see angular/angular.js#6974
-	// $scope.$on('animOut', function($event, element, speed) {
-	//     // do something, eg. scroll to top of page
-	// });
-
-	$scope.percent = 0;
-
-
-
+	
 	uploadImg = function($files, id) {
     //$files: an array of files selected, each file has name, size, and type. 
     for (var i = 0; i < $files.length; i++) {
