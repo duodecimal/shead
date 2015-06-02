@@ -1,0 +1,51 @@
+<body ng-controller="videoCtrl">
+<br>
+	<div class="container">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <strong>Upload Files</strong>
+          <small>Bootstrap files upload</small>
+          <a ui-sref="photo"><button type="button" class="btn btn-primary pull-right" style="margin-top: -7px">Upload photo</button></a>
+        </div>
+        <div class="panel-body">
+
+          <!-- Standar Form -->
+          <h4>Select files from your computer</h4>
+          <form enctype="multipart/form-data" id="js-upload-form" >
+            <div class="form-inline">
+              <div class="form-group">
+                <input type="file" name="files[]" multiple on-read-file="showContent($fileContent)">
+              </div>
+              <button ng-click="submitVideo()" class="btn btn-sm btn-primary" id="js-upload-submit">Upload files</button>
+            </div>
+          </form>
+          <!-- <form method="post" enctype="multipart/form-data" action="/file-upload">
+              <input type="text" name="username">
+              <input type="password" name="password">
+              <input type="file" name="thumbnail">
+              <input type="submit">
+          </form> -->
+
+          <!-- Drop Zone -->
+          <h4>Or drag and drop files below</h4>
+          <div class="upload-drop-zone" id="drop-zone">
+            Just drag and drop files here
+          </div>
+
+        </div>
+      </div>
+    </div> <!-- /container -->
+  <br>
+
+  <table class="table table-hover">
+      <thead>
+        <tr class="active">
+          <th>Tag name</th>
+          <th>Tag value</th>
+        </tr>
+      </thead>
+      <tbody id="exif-table-body">
+      </tbody>
+    </table>
+    
+  </body>

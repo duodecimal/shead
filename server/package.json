@@ -1,0 +1,19 @@
+{
+  "name": "server",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "angular-file-upload": "^1.6.4",
+    "epipebomb": "^0.1.1",
+    "exif": "^0.4.0",
+    "exif2": "0.0.1",
+    "exiftool": "0.0.3",
+    "multer": "^0.1.8"
+  }
+}
