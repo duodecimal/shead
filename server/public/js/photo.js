@@ -28,9 +28,6 @@ angular.module('myApp')
 		}
     }
 
-
-
-
 	function handleFile(file, i) {
 	    var reader = new FileReader();  
 	    var exif;
@@ -50,7 +47,7 @@ angular.module('myApp')
 				// The MakerNote tag can be really large. Remove it to lower memory usage.
 				exif.deleteTag('MakerNote');
 				exif_data = exif.getAllTags();
-				console.log(exif_data);
+				//console.log(exif_data);
 				listOfEXIF.push(exif_data);
 				showDataInTable(exif_data);
 			} catch (error) {
@@ -79,29 +76,34 @@ angular.module('myApp')
     $scope.submitPhoto = function(){
     	
 		//console.log(files);
-    	//var JSONObjFinal = findExif(exif_data);
+    	var JSONObjFinal = findExif(exif_data);
     	console.log(listOfEXIF);
-   //  	if(JSONObjFinal != null){
-   // 			$http.post('http://shead.cloudapp.net:3000/api/ImageMetadatas', JSONObjFinal)
-			// .success(function(data, status, headers, config) {
-			//     console.log("Status : " + status + ", save metadata complete!");
-			//     //console.log(data);
-			//     uploadImg(files, data.id);
-			// })
-			// .error(function(data, status, headers, config) {
+    	if(JSONObjFinal != null){
+   			$http.post('http://shead.cloudapp.net:3000/api/ImageMetadatas', JSONObjFinal)
+			.success(function(data, status, headers, config) {
+			    console.log("Status : " + status + ", save metadata complete!");
+			    //console.log(data);
+			    uploadImg(files, data.id);
+			})
+			.error(function(data, status, headers, config) {
 			    
-			// });	
-   //  	}
-   //  	else{
-   //  		console.log("No GPS data or not select file.");
-   //  	}    
+			});
+			checkNearBy();
+    	}
+    	else{
+    		console.log("No GPS data or not select file.");
+    	}
+
 	}
     
     dropZone.ondrop = function(e) {
         e.preventDefault();
         this.className = 'upload-drop-zone';
-        handleFile(e.dataTransfer.files);
+        //handleFile(e.dataTransfer.files);
         files = e.dataTransfer.files;
+        for (var i = 0; i < files.length; i++) {
+		    handleFile(files[i], i);
+		}
     }
 
     dropZone.ondragover = function() {
@@ -145,6 +147,7 @@ angular.module('myApp')
 		  }).success(function(data, status, headers, config) {
 		    // file is uploaded successfully
 		    console.log("Status : " + status + ", upload " + data.result.files.file[0].name + " complete!");
+		    listOfEXIF = [];
 		  });
 			
       //.error(...) 
@@ -157,5 +160,15 @@ angular.module('myApp')
        It could also be used to monitor the progress of a normal http post/put request with large data*/
     // $scope.upload = $upload.http({...})  see 88#issuecomment-31366487 for sample code. 
   	// };
+
+  	checkNearBy = function(){
+  		list = [];
+  		var centerOfList;
+  		for(var i = 0 ; i < listOfEXIF.length ; i++){
+  			list.push([listOfEXIF[i].GPSLatitude.description, listOfEXIF[i].GPSLongitude.description]);	
+  		}
+  		centerOfList = getLatLngCenter(list);
+  		console.log(centerOfList);
+  	}
 
 });
