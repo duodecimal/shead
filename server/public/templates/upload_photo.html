@@ -23,7 +23,7 @@
           <!-- <input type="text" ng-model="myModelObj"> -->
           
           <span class="btn btn-default btn-block btn-file">
-              Browse <input type="file" id="js-upload-files" accept="image/*" multiple>
+              Browse <input type="file" ng-file-select="onFileSelect($files)" id="js-upload-files" accept="image/*" multiple>
           </span>
 
 <button ng-click="submitPhoto()" class="btn btn-block btn-primary" id="js-upload-submit">Upload</button>
@@ -60,6 +60,18 @@
 
 
           <button ng-click="cancelUpload()" class="btn btn-danger btn-block" ng-show="percent != 0 && percent != 100">Cancel Upload</button>
+
+
+          <div class="js-upload-finished">
+            <h3>Preview</h3>
+            <div class="list-group">
+              <i ng-hide="imageSrc">No image choosed</i>
+              <img ng-src="{{imageSrc}}" width="100px"/>
+            </div>
+          </div>
+
+          <b>Progress:</b>
+          <progress value="{{progress}}"></progress>
 
           <!-- Upload Finished -->
           <!-- <div class="js-upload-finished">

@@ -22,6 +22,7 @@ angular.module('myApp')
     var checkTotalHaveToClose = true;
     var maxDistance = 25;
     $scope.percent = 0;
+    $scope.progress = 0;
     
     document.getElementById("js-upload-files").onclick = function(e) {
     	listOfEXIF = [];
@@ -32,7 +33,7 @@ angular.module('myApp')
 
     document.getElementById("js-upload-files").onchange = function(e) {
         files = e.target.files;
-        //console.log(files);
+    	//console.log(files);
         //handleFile(files);	
         //uploadImg(files);
         if(files.length != 0){
@@ -42,6 +43,9 @@ angular.module('myApp')
 			$timeout(function() {
 				checkNearBy();
 			}, 10);	
+			//console.log(files);
+			//console.log(e);
+			showThumbnail(e);
         }
         else{
         	listOfEXIF = [];
@@ -183,7 +187,7 @@ angular.module('myApp')
 		    //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 		    $scope.percent = parseInt(100.0 * evt.loaded / evt.total);
 		    //console.log($scope.percent);
-		    //console.log(evt.loaded);
+		    //console.log(evt);
 		  }).success(function(data, status, headers, config) {
 		    // file is uploaded successfully
 		    for(var i = 0 ; i < data.result.files.file.length ; i++){
@@ -265,4 +269,18 @@ angular.module('myApp')
 			$scope.percent = 0;
 		}, 10);	
 	}
+
+	
+    showThumbnail = function(e){
+    	var reader = new FileReader();
+		reader.onload = function(e){
+			//alert(e.target.result);
+			$timeout(function() {
+				$scope.imageSrc = e.target.result;
+			}, 10);
+			$scope.progress = e.loaded / e.total;
+		};             
+		reader.readAsDataURL(e.target.files[0])
+    }
+ 
 });
