@@ -27,6 +27,7 @@ angular.module('myApp')
     	listOfEXIF = [];
     	listOfJSONFinal = [];
     	centerOfList = [];
+    	checkTotalHaveToClose = true;
     }
 
     document.getElementById("js-upload-files").onchange = function(e) {
@@ -109,7 +110,7 @@ angular.module('myApp')
 			    	console.log("Status : " + status + ", ID : "+data[i].id+", save metadata complete!");
 			    	idList.push(data[i].id);
 			    }
-			    	//uploadImg(idList); 
+			    	uploadImg(idList); 
 			})
 			.error(function(data, status, headers, config) {
 			    
@@ -209,10 +210,11 @@ angular.module('myApp')
 
   	checkNearBy = function(){
   		list = [];
-  		var checkTotalHaveGPS = true;
+  		var checkTotalHaveGPS;
   		for(var i = 0 ; i < listOfEXIF.length ; i++){
   			if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
   				list.push([listOfEXIF[i].GPSLatitude.description, listOfEXIF[i].GPSLongitude.description]);	
+  				checkTotalHaveGPS = true;
   			}
   			else{
   				console.log("File " + files[i].name + " not have GPS.");
@@ -226,14 +228,18 @@ angular.module('myApp')
 	  			//console.log(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description));
 	  			if(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description) > maxDistance){
 	  				checkTotalHaveToClose = false;
+	  				break;
+	  			}
+	  			else{
+	  				checkTotalHaveToClose = true;
 	  			}
 	  		}
   		}
-  		if(!checkTotalHaveToClose){
-  			console.log("GPS point not close");
+  		if(checkTotalHaveToClose){
+  			console.log("Can be upload");
   		}
   		else{
-  			console.log("Can be upload");	
+  			console.log("GPS point not close");
   		}
   	}
 
@@ -250,5 +256,13 @@ angular.module('myApp')
 	}
 	Number.prototype.toRad = function() {
 		return this * Math.PI / 180;
+	}
+
+	$scope.cancelUpload = function(){
+		$scope.upload.abort();
+		console.log("canceled.");
+		$timeout(function() {
+			$scope.percent = 0;
+		}, 10);	
 	}
 });

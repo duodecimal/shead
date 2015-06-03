@@ -59,7 +59,7 @@
           <div ng-show="percent != 0">{{percent}}% Complete</div>
 
 
-          <button ng-click="upload.abort()" class="btn btn-danger btn-block" ng-show="percent != 0 && percent != 100">Cancel Upload</button>
+          <button ng-click="cancelUpload()" class="btn btn-danger btn-block" ng-show="percent != 0 && percent != 100">Cancel Upload</button>
 
           <!-- Upload Finished -->
           <!-- <div class="js-upload-finished">
@@ -75,7 +75,7 @@
     </div> <!-- /container -->
   <br>
 
-  <table class="table table-hover">
+  <!-- <table class="table table-hover">
       <thead>
         <tr class="active">
           <th>Tag name</th>
@@ -84,5 +84,5 @@
       </thead>
       <tbody id="exif-table-body">
       </tbody>
-    </table>
+    </table> -->
 </body>
