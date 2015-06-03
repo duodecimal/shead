@@ -65,8 +65,8 @@
           <div class="js-upload-finished">
             <h3>Preview</h3>
             <div class="list-group">
-              <i ng-hide="imageSrc">No image choosed</i>
-              <img ng-src="{{imageSrc}}" width="100px"/>
+              <i ng-hide="listImgThumb.length">No image choosed</i>
+              <img style="margin-right:5px; margin-bottom:5px" ng-src="{{value}}" width="100px" ng-repeat="(key, value) in listImgThumb"/>
             </div>
           </div>
 

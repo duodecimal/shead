@@ -21,9 +21,15 @@ angular.module('myApp')
     var centerOfList = [];
     var checkTotalHaveToClose = true;
     var maxDistance = 25;
+
+    $scope.listImgThumb = [];
     $scope.percent = 0;
     $scope.progress = 0;
     
+    // $scope.listImgThumb.push("test1");
+    // $scope.listImgThumb.push("test2");
+    // $scope.listImgThumb.push("test3");
+
     document.getElementById("js-upload-files").onclick = function(e) {
     	listOfEXIF = [];
     	listOfJSONFinal = [];
@@ -44,7 +50,6 @@ angular.module('myApp')
 				checkNearBy();
 			}, 10);	
 			//console.log(files);
-			//console.log(e);
 			showThumbnail(e);
         }
         else{
@@ -270,17 +275,41 @@ angular.module('myApp')
 		}, 10);	
 	}
 
-	
-    showThumbnail = function(e){
-    	var reader = new FileReader();
-		reader.onload = function(e){
-			//alert(e.target.result);
-			$timeout(function() {
-				$scope.imageSrc = e.target.result;
-			}, 10);
-			$scope.progress = e.loaded / e.total;
-		};             
-		reader.readAsDataURL(e.target.files[0])
+	var processedCount=0; // global variable
+	var totalFiles = 0; // global variable
+
+    showThumbnail = function(evt){
+    	var files = evt.target.files; // FileList object
+
+		totalFiles = files.length; // important
+
+		// files is a FileList of File objects. List some properties.
+		for (var i = 0, f; f = files[i]; i++) {
+		//Create new file reader
+		var r = new FileReader();
+		//On load call
+		r.onload = (function(theFile){
+		    return function(){
+		      onLoadHandler(this,theFile);
+		      onLoadEndHandler();
+		   };
+		})(f);
+		r.readAsDataURL(f);
+		}
     }
  
+ 	function onLoadEndHandler(){
+	  processedCount++;
+	  if(processedCount == totalFiles){ 
+	    console.log($scope.listImgThumb);
+	  }
+	  $timeout(function() {
+	  	$scope.progress = processedCount/files.length;
+	  }, 10);
+	}
+
+	function onLoadHandler(fileReader, file){
+		$scope.listImgThumb.push(fileReader.result);
+	}
+
 });
