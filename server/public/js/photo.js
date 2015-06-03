@@ -1,7 +1,7 @@
 //inject angular file upload directives and services.
 angular.module('myApp')
 
-.controller('ctrlPhoto', function($scope, $http, $rootScope, $upload){
+.controller('ctrlPhoto', function($scope, $http, $rootScope, $upload, $timeout){
 	// Check that the browser supports the FileReader API.
 	if (!window.FileReader) {
 		document.write('<strong>Sorry, your web browser does not support the FileReader API.</strong>');
@@ -13,19 +13,38 @@ angular.module('myApp')
 
     var dropZone = document.getElementById('drop-zone');
     var uploadForm = document.getElementById('js-upload-form');
-    var exif_data;
     var files;
+    var exif_data;
     var listOfEXIF = [];
+    var JSONObjFinal;
+    var listOfJSONFinal = [];
+    var centerOfList = [];
+    var checkTotalHaveToClose = true;
+    var maxDistance = 25;
     $scope.percent = 0;
+    
+    document.getElementById("js-upload-files").onclick = function(e) {
+    	listOfEXIF = [];
+    	listOfJSONFinal = [];
+    	centerOfList = [];
+    }
 
     document.getElementById("js-upload-files").onchange = function(e) {
         files = e.target.files;
         //console.log(files);
         //handleFile(files);	
         //uploadImg(files);
-        for (var i = 0; i < files.length; i++) {
+        if(files.length != 0){
+        	for (var i = 0; i < files.length; i++) {
 		    handleFile(files[i], i);
-		}
+			}
+			$timeout(function() {
+				checkNearBy();
+			}, 10);	
+        }
+        else{
+        	listOfEXIF = [];
+        }
     }
 
 	function handleFile(file, i) {
@@ -49,7 +68,7 @@ angular.module('myApp')
 				exif_data = exif.getAllTags();
 				//console.log(exif_data);
 				listOfEXIF.push(exif_data);
-				showDataInTable(exif_data);
+				//showDataInTable(exif_data);
 			} catch (error) {
 				alert(error);
 			}
@@ -57,10 +76,10 @@ angular.module('myApp')
 	    //reader.readAsText(file, "UTF-8");
 
     	reader.readAsArrayBuffer(files[i].slice(0, 128 * 1024));	
-
 	}
 
 	
+
 	showDataInTable = function(tags){
 		var tableBody, name, row;
 		tableBody = document.getElementById('exif-table-body');
@@ -74,21 +93,28 @@ angular.module('myApp')
 	}
 
     $scope.submitPhoto = function(){
-    	
-		//console.log(files);
-    	var JSONObjFinal = findExif(exif_data);
-    	console.log(listOfEXIF);
-    	if(JSONObjFinal != null){
-   			$http.post('http://shead.cloudapp.net:3000/api/ImageMetadatas', JSONObjFinal)
+    	var idList = [];
+    	//console.log(listOfEXIF);
+    	for(var i = 0 ; i < listOfEXIF.length ; i++){
+    		listOfJSONFinal.push(findExif(listOfEXIF[i]));
+    	}
+
+		//console.log(listOfJSONFinal);
+
+    	if(listOfJSONFinal != null && checkTotalHaveToClose){
+   			$http.post('http://shead.cloudapp.net:3000/api/ImageMetadatas', listOfJSONFinal)
 			.success(function(data, status, headers, config) {
-			    console.log("Status : " + status + ", save metadata complete!");
-			    //console.log(data);
-			    uploadImg(files, data.id);
+			    //console.log("Status : " + status + ", save metadata complete!");
+			    for(var i = 0 ; i < data.length ; i++){
+			    	console.log("Status : " + status + ", ID : "+data[i].id+", save metadata complete!");
+			    	idList.push(data[i].id);
+			    }
+			    	//uploadImg(idList); 
 			})
 			.error(function(data, status, headers, config) {
 			    
 			});
-			checkNearBy();
+			
     	}
     	else{
     		console.log("No GPS data or not select file.");
@@ -121,12 +147,23 @@ angular.module('myApp')
 	};
 
 	
-	uploadImg = function($files, id) {
-    //$files: an array of files selected, each file has name, size, and type. 
-    for (var i = 0; i < $files.length; i++) {
-		var file = $files[i];
-	}
-		//console.log(file);
+	uploadImg = function(idList) {
+	    //$files: an array of files selected, each file has name, size, and type. 
+
+	    //var file = $files;
+		//console.log($files, id);
+		var fileList = [];
+		var nameList = [];
+		//console.log(idList);
+
+		//console.log(files);
+		for(var i = 0 ; i < files.length ; i++){
+			fileList.push(files[i]);
+			nameList.push(idList[i] + (files[i].type === "image/jpeg" ? ".jpg" : ""));
+		}
+		//console.log(fileList);
+		//console.log(nameList);
+
 		$scope.upload = $upload
 		.upload({
 		    url: 'http://shead.cloudapp.net:3000/api/containers/images/upload', //upload.php script, node.js route, or servlet url 
@@ -134,8 +171,9 @@ angular.module('myApp')
 		    //headers: {'header-key': 'header-value'}, 
 		    //withCredentials: true, 
 		    //data: {myObj: "test11111111"},
-		    file: file, // or list of files ($files) for html5 only 
-		    fileName: id + (file.type === "image/jpeg" ? ".jpg" : "")
+		    file: fileList, // or list of files ($files) for html5 only 
+		    //fileName: id + (file.type === "image/jpeg" ? ".jpg" : "")
+		    fileName: nameList,
 		    // customize file formData name ('Content-Desposition'), server side file variable name.  
 		    //fileFormDataName: myFile, //or a list of names for multiple files (html5). Default is 'file'  
 		    // customize how data is added to formData. See #40#issuecomment-28612000 for sample code 
@@ -143,11 +181,19 @@ angular.module('myApp')
 		  }).progress(function(evt) {
 		    //console.log('percent: ' + parseInt(100.0 * evt.loaded / evt.total));
 		    $scope.percent = parseInt(100.0 * evt.loaded / evt.total);
-
+		    //console.log($scope.percent);
+		    //console.log(evt.loaded);
 		  }).success(function(data, status, headers, config) {
 		    // file is uploaded successfully
-		    console.log("Status : " + status + ", upload " + data.result.files.file[0].name + " complete!");
+		    for(var i = 0 ; i < data.result.files.file.length ; i++){
+		    	console.log("Status : " + status + ", upload " + data.result.files.file[i].name + " complete!");	
+		    }
+		    
 		    listOfEXIF = [];
+		    listOfJSONFinal = [];
+		    fileList = [];
+			nameList = [];
+		    console.log(data);
 		  });
 			
       //.error(...) 
@@ -163,12 +209,46 @@ angular.module('myApp')
 
   	checkNearBy = function(){
   		list = [];
-  		var centerOfList;
+  		var checkTotalHaveGPS = true;
   		for(var i = 0 ; i < listOfEXIF.length ; i++){
-  			list.push([listOfEXIF[i].GPSLatitude.description, listOfEXIF[i].GPSLongitude.description]);	
+  			if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
+  				list.push([listOfEXIF[i].GPSLatitude.description, listOfEXIF[i].GPSLongitude.description]);	
+  			}
+  			else{
+  				console.log("File " + files[i].name + " not have GPS.");
+  				checkTotalHaveGPS = false;
+  				checkTotalHaveToClose = false;
+  			}
   		}
-  		centerOfList = getLatLngCenter(list);
-  		console.log(centerOfList);
+  		if(checkTotalHaveGPS){
+  			centerOfList = getLatLngCenter(list);
+	  		for(var i = 0 ; i < listOfEXIF.length ; i++){
+	  			//console.log(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description));
+	  			if(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description) > maxDistance){
+	  				checkTotalHaveToClose = false;
+	  			}
+	  		}
+  		}
+  		if(!checkTotalHaveToClose){
+  			console.log("GPS point not close");
+  		}
+  		else{
+  			console.log("Can be upload");	
+  		}
   	}
 
+  	function calculateDistance(lat1, lon1, lat2, lon2) {
+		var R = 6371000; // metres
+		var dLat = (lat2 - lat1).toRad();
+		var dLon = (lon2 - lon1).toRad(); 
+		var a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+			Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+			Math.sin(dLon / 2) * Math.sin(dLon / 2); 
+		var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)); 
+		var d = R * c;
+		return d;
+	}
+	Number.prototype.toRad = function() {
+		return this * Math.PI / 180;
+	}
 });
