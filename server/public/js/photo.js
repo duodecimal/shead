@@ -19,12 +19,14 @@ angular.module('myApp')
     var JSONObjFinal;
     var listOfJSONFinal = [];
     var centerOfList = [];
+    var idList = [];
     var checkTotalHaveToClose = true;
     var maxDistance = 25;
 
     $scope.listImgThumb = [];
     $scope.percent = 0;
     $scope.progress = 0;
+    $scope.isDisable = false;
     
     // $scope.listImgThumb.push("test1");
     // $scope.listImgThumb.push("test2");
@@ -34,6 +36,7 @@ angular.module('myApp')
     	listOfEXIF = [];
     	listOfJSONFinal = [];
     	centerOfList = [];
+    	idList = [];
     	checkTotalHaveToClose = true;
     }
 
@@ -50,6 +53,7 @@ angular.module('myApp')
 				checkNearBy();
 			}, 10);	
 			//console.log(files);
+			//console.log(e);
 			showThumbnail(e);
         }
         else{
@@ -103,7 +107,7 @@ angular.module('myApp')
 	}
 
     $scope.submitPhoto = function(){
-    	var idList = [];
+    	$scope.isDisable = true;
     	//console.log(listOfEXIF);
     	for(var i = 0 ; i < listOfEXIF.length ; i++){
     		listOfJSONFinal.push(findExif(listOfEXIF[i]));
@@ -111,7 +115,7 @@ angular.module('myApp')
 
 		//console.log(listOfJSONFinal);
 
-    	if(listOfJSONFinal != null && checkTotalHaveToClose){
+    	if(listOfJSONFinal != null && checkTotalHaveToClose && listOfEXIF.length != 0){
    			$http.post('http://shead.cloudapp.net:3000/api/ImageMetadatas', listOfJSONFinal)
 			.success(function(data, status, headers, config) {
 			    //console.log("Status : " + status + ", save metadata complete!");
@@ -128,6 +132,7 @@ angular.module('myApp')
     	}
     	else{
     		console.log("No GPS data or not select file.");
+    		$scope.isDisable = false;
     	}
 
 	}
@@ -137,9 +142,20 @@ angular.module('myApp')
         this.className = 'upload-drop-zone';
         //handleFile(e.dataTransfer.files);
         files = e.dataTransfer.files;
-        for (var i = 0; i < files.length; i++) {
-		    handleFile(files[i], i);
+        if(files.length != 0){
+	        for (var i = 0; i < files.length; i++) {
+			    handleFile(files[i], i);
+			}
+			$timeout(function() {
+					checkNearBy();
+			}, 10);	
+			//console.log(files);
+			//console.log(e);
+			showThumbnail(e);
 		}
+		else{
+        	listOfEXIF = [];
+        }
     }
 
     dropZone.ondragover = function() {
@@ -203,7 +219,8 @@ angular.module('myApp')
 		    listOfJSONFinal = [];
 		    fileList = [];
 			nameList = [];
-		    console.log(data);
+			$scope.isDisable = false;
+		    //console.log(data);
 		  });
 			
       //.error(...) 
@@ -245,7 +262,7 @@ angular.module('myApp')
 	  		}
   		}
   		if(checkTotalHaveToClose){
-  			console.log("Can be upload");
+  			console.log("Can be uploaded");
   		}
   		else{
   			console.log("GPS point not close");
@@ -272,14 +289,20 @@ angular.module('myApp')
 		console.log("canceled.");
 		$timeout(function() {
 			$scope.percent = 0;
-		}, 10);	
+		}, 10);
+		idList = [];
+		listOfEXIF = [];
+    	listOfJSONFinal = [];
+    	centerOfList = [];
+    	files = null;
+    	$scope.isDisable = false;
 	}
 
 	var processedCount=0; // global variable
 	var totalFiles = 0; // global variable
 
     showThumbnail = function(evt){
-    	var files = evt.target.files; // FileList object
+    	var files = (evt.dataTransfer || evt.target).files; // FileList object
 
 		totalFiles = files.length; // important
 
@@ -301,7 +324,7 @@ angular.module('myApp')
  	function onLoadEndHandler(){
 	  processedCount++;
 	  if(processedCount == totalFiles){ 
-	    console.log($scope.listImgThumb);
+	    //console.log($scope.listImgThumb);
 	  }
 	  $timeout(function() {
 	  	$scope.progress = processedCount/files.length;

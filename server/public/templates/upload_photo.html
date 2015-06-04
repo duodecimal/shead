@@ -26,7 +26,7 @@
               Browse <input type="file" ng-file-select="onFileSelect($files)" id="js-upload-files" accept="image/*" multiple>
           </span>
 
-<button ng-click="submitPhoto()" class="btn btn-block btn-primary" id="js-upload-submit">Upload</button>
+<button ng-click="submitPhoto()" class="btn btn-block btn-primary" id="js-upload-submit" ng-disabled="isDisable">Upload</button>
 
           <br>
           <br>
@@ -70,7 +70,7 @@
             </div>
           </div>
 
-          <b>Progress:</b>
+          <b>Progress</b>
           <progress value="{{progress}}"></progress>
 
           <!-- Upload Finished -->
@@ -81,7 +81,21 @@
               <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-02.jpg</a>
             </div>
           </div> -->
-
+          <h3>Shead</h3>
+          <input type="text" class="form-control" placeholder="Title">
+          <br>
+          <input type="text" class="form-control" placeholder="Tags">
+          <br>
+          <textarea class="form-control" rows="3" placeholder="Details"></textarea>
+          <br>
+          <select class="form-control">
+            <option selected>Category</option>
+            <option>- 1</option>
+            <option>- 2</option>
+            <option>- 3</option>
+            <option>- 4</option>
+            <option>- 5</option>
+          </select>
         </div>
       </div>
     </div> <!-- /container -->
