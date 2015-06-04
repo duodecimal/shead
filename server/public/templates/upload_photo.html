@@ -26,11 +26,6 @@
               Browse <input type="file" ng-file-select="onFileSelect($files)" id="js-upload-files" accept="image/*" multiple>
           </span>
 
-<button ng-click="submitPhoto()" class="btn btn-block btn-primary" id="js-upload-submit" ng-disabled="isDisable">Upload</button>
-
-          <br>
-          <br>
-
          <!--  <input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*"> -->
           
           <!-- <div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div> -->
@@ -63,15 +58,16 @@
 
 
           <div class="js-upload-finished">
-            <h3>Preview</h3>
+            <h3>Preview<button ng-click="clearImg()" class="btn btn-danger btn-sm pull-right" ng-hide="!listImgThumb.length">Clear</button></h3>
             <div class="list-group">
               <i ng-hide="listImgThumb.length">No image choosed</i>
-              <img style="margin-right:5px; margin-bottom:5px" ng-src="{{value}}" width="100px" ng-repeat="(key, value) in listImgThumb"/>
+              <img style="margin-right:5px; margin-bottom:5px" ng-src="{{value[0]}}" width="100px" ng-repeat="(key, value) in listImgThumb" ng-class="{'grayscale' : value[1]}"/>
             </div>
           </div>
 
-          <b>Progress</b>
-          <progress value="{{progress}}"></progress>
+          <span ng-hide="!listImgThumb.length"><b>Progress</b>
+            <progress value="{{progress}}"></progress>
+          </span>
 
           <!-- Upload Finished -->
           <!-- <div class="js-upload-finished">
@@ -84,19 +80,20 @@
           <h3>Shead</h3>
           <input type="text" class="form-control" placeholder="Title">
           <br>
-          <input type="text" class="form-control" placeholder="Tags">
-          <br>
-          <textarea class="form-control" rows="3" placeholder="Details"></textarea>
-          <br>
           <select class="form-control">
-            <option selected>Category</option>
+            <option selected>Type</option>
             <option>- 1</option>
             <option>- 2</option>
             <option>- 3</option>
             <option>- 4</option>
             <option>- 5</option>
           </select>
+          <br>
+          <input type="text" class="form-control" placeholder="Tags">
+          <br>
+          <button ng-click="submitPhoto()" class="btn btn-block btn-primary" id="js-upload-submit" ng-disabled="isDisable">Share</button>
         </div>
+
       </div>
     </div> <!-- /container -->
   <br>

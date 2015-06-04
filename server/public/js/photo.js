@@ -1,7 +1,7 @@
 //inject angular file upload directives and services.
 angular.module('myApp')
 
-.controller('ctrlPhoto', function($scope, $http, $rootScope, $upload, $timeout){
+.controller('ctrlPhoto', function($scope, $http, $rootScope, $upload, $timeout, $interval){
 	// Check that the browser supports the FileReader API.
 	if (!window.FileReader) {
 		document.write('<strong>Sorry, your web browser does not support the FileReader API.</strong>');
@@ -20,8 +20,12 @@ angular.module('myApp')
     var listOfJSONFinal = [];
     var centerOfList = [];
     var idList = [];
+    var listOfGPSEachFile = [];
     var checkTotalHaveToClose = true;
     var maxDistance = 25;
+    var tempArrayImg = [];
+    var processedCount= 0;
+	var totalFiles = 0;
 
     $scope.listImgThumb = [];
     $scope.percent = 0;
@@ -37,7 +41,10 @@ angular.module('myApp')
     	listOfJSONFinal = [];
     	centerOfList = [];
     	idList = [];
+    	listOfGPSEachFile = [];
     	checkTotalHaveToClose = true;
+    	processedCount= 0;
+		totalFiles = 0;
     }
 
     document.getElementById("js-upload-files").onchange = function(e) {
@@ -51,10 +58,11 @@ angular.module('myApp')
 			}
 			$timeout(function() {
 				checkNearBy();
-			}, 10);	
+				showThumbnail(e);
+			}, 1000);	
 			//console.log(files);
 			//console.log(e);
-			showThumbnail(e);
+			//showThumbnail(e);
         }
         else{
         	listOfEXIF = [];
@@ -235,38 +243,45 @@ angular.module('myApp')
   	// };
 
   	checkNearBy = function(){
-  		list = [];
   		var checkTotalHaveGPS;
   		for(var i = 0 ; i < listOfEXIF.length ; i++){
   			if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
-  				list.push([listOfEXIF[i].GPSLatitude.description, listOfEXIF[i].GPSLongitude.description]);	
+  				listOfGPSEachFile.push([listOfEXIF[i].GPSLatitude.description, listOfEXIF[i].GPSLongitude.description]);	
   				checkTotalHaveGPS = true;
   			}
   			else{
-  				console.log("File " + files[i].name + " not have GPS.");
+  				console.log("File " + files[i].name + " have not GPS.");
+  				listOfGPSEachFile.push(null); //push null to list if file[i] have not GPS.
   				checkTotalHaveGPS = false;
   				checkTotalHaveToClose = false;
   			}
   		}
   		if(checkTotalHaveGPS){
-  			centerOfList = getLatLngCenter(list);
+  			centerOfList = getLatLngCenter(listOfGPSEachFile);
 	  		for(var i = 0 ; i < listOfEXIF.length ; i++){
 	  			//console.log(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description));
-	  			if(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description) > maxDistance){
-	  				checkTotalHaveToClose = false;
-	  				break;
-	  			}
-	  			else{
-	  				checkTotalHaveToClose = true;
-	  			}
+		  		if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
+		  			if(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description) > maxDistance){
+		  				checkTotalHaveToClose = false; //some file so far than maxDistance
+		  				break;
+		  			}
+		  			else{
+		  				checkTotalHaveToClose = true; //all file have gps and close together
+		  			}
+		  		}
+		  		else{
+		  			checkTotalHaveToClose = false; //some file not have GPS
+		  				break;
+		  		}
+	  		}
+	  		if(checkTotalHaveToClose){
+	  			console.log("Can be uploaded");
+	  		}
+	  		else{
+	  			console.log("GPS point not close");
 	  		}
   		}
-  		if(checkTotalHaveToClose){
-  			console.log("Can be uploaded");
-  		}
-  		else{
-  			console.log("GPS point not close");
-  		}
+  		
   	}
 
   	function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -294,45 +309,104 @@ angular.module('myApp')
 		listOfEXIF = [];
     	listOfJSONFinal = [];
     	centerOfList = [];
+    	listOfGPSEachFile = [];
     	files = null;
     	$scope.isDisable = false;
 	}
 
-	var processedCount=0; // global variable
-	var totalFiles = 0; // global variable
 
+    
     showThumbnail = function(evt){
     	var files = (evt.dataTransfer || evt.target).files; // FileList object
 
 		totalFiles = files.length; // important
 
+		
+		
 		// files is a FileList of File objects. List some properties.
-		for (var i = 0, f; f = files[i]; i++) {
-		//Create new file reader
-		var r = new FileReader();
-		//On load call
-		r.onload = (function(theFile){
-		    return function(){
-		      onLoadHandler(this,theFile);
-		      onLoadEndHandler();
-		   };
-		})(f);
-		r.readAsDataURL(f);
-		}
+		var i = 0;
+		$interval(function(){
+			f = files[i]
+			//Create new file reader
+			var r = new FileReader();
+			//On load call
+			r.onload = (function(theFile){
+			    return function(){
+			      onLoadHandler(this, i);
+			      onLoadEndHandler(this, i);
+			   };
+			})(f);
+			r.readAsDataURL(f);
+			i++;	
+		}, 500, files.length);
+
+		// for (var i = 0, f; f = files[i]; i++) {
+
+		// 	//Create new file reader
+		// 	var r = new FileReader();
+		// 	//On load call
+		// 	r.onload = (function(theFile){
+		// 	    return function(){
+		// 	      onLoadHandler(this, i);
+		// 	      onLoadEndHandler(this, i);
+		// 	   };
+		// 	})(f);
+		// 	r.readAsDataURL(f);
+		// }
     }
  
- 	function onLoadEndHandler(){
-	  processedCount++;
-	  if(processedCount == totalFiles){ 
-	    //console.log($scope.listImgThumb);
-	  }
+ 	function onLoadEndHandler(fileReader, index){
+		//console.log(index);
+		processedCount++;
+		//console.log(processedCount);
+	  	//console.log(listOfGPSEachFile);
+	  	
+		if(processedCount == totalFiles){ 
+			$timeout(function() {
+				console.log($scope.listImgThumb);
+				console.log(listOfGPSEachFile);
+				//$scope.listImgThumb = angular.copy(tempArrayImg.sort());
+			}, 10);
+		}
+
+	 //  	if(listOfGPSEachFile[processedCount-1] != null){
+		// 	$scope.listImgThumb.push([fileReader.result, false]);	
+		// 	//console.log(processedCount-1);
+		// }
+		// else{
+		// 	$scope.listImgThumb.push([fileReader.result, true]);
+		// 	console.log("null founded.");		
+		// }
 	  $timeout(function() {
 	  	$scope.progress = processedCount/files.length;
 	  }, 10);
 	}
 
-	function onLoadHandler(fileReader, file){
-		$scope.listImgThumb.push(fileReader.result);
+	function onLoadHandler(fileReader, index){
+		
+		if(listOfGPSEachFile[processedCount] != null){
+			//tempArrayImg.push([fileReader.result, false, processedCount]);	
+			$scope.listImgThumb.push([fileReader.result, false]);	
+			//console.log(processedCount-1);
+		}
+		else{
+			//tempArrayImg.push([fileReader.result, true, processedCount]);
+			$scope.listImgThumb.push([fileReader.result, true]);
+			//console.log("null founded.");		
+		}	
+		
 	}
 
+	$scope.clearImg = function(){
+		$scope.listImgThumb = [];
+		$scope.progress = 0;
+		processedCount= 0;
+		totalFiles = 0;
+		// listOfEXIF = [];
+  //   	listOfJSONFinal = [];
+  //   	centerOfList = [];
+  //   	idList = [];
+  //   	listOfGPSEachFile = [];
+  //   	checkTotalHaveToClose = true;
+	}
 });

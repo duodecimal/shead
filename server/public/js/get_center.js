@@ -14,12 +14,14 @@ function rad2degr(rad) { return rad * 180 / Math.PI; }
 	    var LNGIDX = 1;
 
 	    for (var i=0; i<latLngInDegr.length; i++) {
-	        lat = degr2rad(latLngInDegr[i][LATIDX]);
-	        lng = degr2rad(latLngInDegr[i][LNGIDX]);
-	        // sum of cartesian coordinates
-	        sumX += Math.cos(lat) * Math.cos(lng);
-	        sumY += Math.cos(lat) * Math.sin(lng);
-	        sumZ += Math.sin(lat);
+	        if(latLngInDegr[i] != null){
+	        	lat = degr2rad(latLngInDegr[i][LATIDX]);
+		        lng = degr2rad(latLngInDegr[i][LNGIDX]);
+		        // sum of cartesian coordinates
+		        sumX += Math.cos(lat) * Math.cos(lng);
+		        sumY += Math.cos(lat) * Math.sin(lng);
+		        sumZ += Math.sin(lat);
+	        }
 	    }
 
 	    var avgX = sumX / latLngInDegr.length;
