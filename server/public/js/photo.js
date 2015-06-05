@@ -257,14 +257,28 @@ angular.module('myApp')
   				checkTotalHaveToClose = false;
   			}
   		}
-  		if(checkTotalHaveGPS){
-  			centerOfList = getLatLngCenter(listOfGPSEachFile);
+  		//if(checkTotalHaveGPS){
+  		if(true){
+  			//centerOfList = getLatLngCenter(listOfGPSEachFile);
+  			//console.log(listOfGPSEachFile);
+			
+			//get GPS point first file
+			for(var i = 0 ; i < listOfGPSEachFile.length ; i++){
+				if(listOfGPSEachFile[i] != null){
+					centerOfList = listOfGPSEachFile[i];
+					break;
+				}
+			}
+			
+			//console.log(centerOfList);
+			//console.log(listOfEXIF);
+			
 	  		for(var i = 0 ; i < listOfEXIF.length ; i++){
 	  			//console.log(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description));
 		  		if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
 		  			if(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description) > maxDistance){
 		  				checkTotalHaveToClose = false; //some file so far than maxDistance
-		  				listOfGPSNearEachFile.push(true);
+		  				listOfGPSNearEachFile.push(true); //true mean far
 		  				//break;
 		  			}
 		  			else{
@@ -274,7 +288,8 @@ angular.module('myApp')
 		  		}
 		  		else{
 		  			checkTotalHaveToClose = false; //some file not have GPS
-		  				break;
+		  			listOfGPSNearEachFile.push(null);
+		  			//break;
 		  		}
 	  		}
 	  		if(checkTotalHaveToClose){
