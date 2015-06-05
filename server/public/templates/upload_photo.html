@@ -61,12 +61,20 @@
             <h3>Preview<button ng-click="clearImg()" class="btn btn-danger btn-sm pull-right" ng-hide="!listImgThumb.length">Clear</button></h3>
             <div class="list-group">
               <i ng-hide="listImgThumb.length">No image choosed</i>
-              <img style="margin-right:5px; margin-bottom:5px" ng-src="{{value[0]}}" width="100px" ng-repeat="(key, value) in listImgThumb" ng-class="{'grayscale' : value[1]}"/>
+
+            <div class="img-review">
+              <span ng-repeat="(key, value) in listImgThumb">
+                  <img ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1]}"/>
+                  <img ng-class="{'overlay_no_gps' : value[1]}"/>
+              </span>
+            </div>
+
             </div>
           </div>
 
-          <span ng-hide="!listImgThumb.length"><b>Progress</b>
-            <progress value="{{progress}}"></progress>
+          <span ng-hide="totalFiles == processedCount"><b>Loading...</b>
+            <!-- <progress value="{{progress}}"></progress> -->
+            <img src="img/loading_spinner.gif" width="40px"/>
           </span>
 
           <!-- Upload Finished -->
@@ -108,4 +116,5 @@
       <tbody id="exif-table-body">
       </tbody>
     </table> -->
+
 </body>

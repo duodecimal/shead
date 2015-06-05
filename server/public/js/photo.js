@@ -24,14 +24,14 @@ angular.module('myApp')
     var checkTotalHaveToClose = true;
     var maxDistance = 25;
     var tempArrayImg = [];
-    var processedCount= 0;
-	var totalFiles = 0;
 
+	$scope.totalFiles = 0;
     $scope.listImgThumb = [];
     $scope.percent = 0;
     $scope.progress = 0;
     $scope.isDisable = false;
-    
+    $scope.processedCount= 0;
+
     // $scope.listImgThumb.push("test1");
     // $scope.listImgThumb.push("test2");
     // $scope.listImgThumb.push("test3");
@@ -43,8 +43,8 @@ angular.module('myApp')
     	idList = [];
     	listOfGPSEachFile = [];
     	checkTotalHaveToClose = true;
-    	processedCount= 0;
-		totalFiles = 0;
+    	$scope.processedCount= 0;
+		$scope.totalFiles = 0;
     }
 
     document.getElementById("js-upload-files").onchange = function(e) {
@@ -319,7 +319,7 @@ angular.module('myApp')
     showThumbnail = function(evt){
     	var files = (evt.dataTransfer || evt.target).files; // FileList object
 
-		totalFiles = files.length; // important
+		$scope.totalFiles = files.length; // important
 
 		
 		
@@ -357,40 +357,40 @@ angular.module('myApp')
  
  	function onLoadEndHandler(fileReader, index){
 		//console.log(index);
-		processedCount++;
-		//console.log(processedCount);
+		$scope.processedCount++;
+		console.log($scope.processedCount);
 	  	//console.log(listOfGPSEachFile);
 	  	
-		if(processedCount == totalFiles){ 
+		if($scope.processedCount == $scope.totalFiles){ 
 			$timeout(function() {
-				console.log($scope.listImgThumb);
-				console.log(listOfGPSEachFile);
+				//console.log($scope.listImgThumb);
+				//console.log(listOfGPSEachFile);
 				//$scope.listImgThumb = angular.copy(tempArrayImg.sort());
 			}, 10);
 		}
 
-	 //  	if(listOfGPSEachFile[processedCount-1] != null){
+	 //  	if(listOfGPSEachFile[$scope.processedCount-1] != null){
 		// 	$scope.listImgThumb.push([fileReader.result, false]);	
-		// 	//console.log(processedCount-1);
+		// 	//console.log($scope.processedCount-1);
 		// }
 		// else{
 		// 	$scope.listImgThumb.push([fileReader.result, true]);
 		// 	console.log("null founded.");		
 		// }
 	  $timeout(function() {
-	  	$scope.progress = processedCount/files.length;
+	  	$scope.progress = $scope.processedCount/files.length;
 	  }, 10);
 	}
 
 	function onLoadHandler(fileReader, index){
 		
-		if(listOfGPSEachFile[processedCount] != null){
-			//tempArrayImg.push([fileReader.result, false, processedCount]);	
+		if(listOfGPSEachFile[$scope.processedCount] != null){
+			//tempArrayImg.push([fileReader.result, false, $scope.processedCount]);	
 			$scope.listImgThumb.push([fileReader.result, false]);	
-			//console.log(processedCount-1);
+			//console.log($scope.processedCount-1);
 		}
 		else{
-			//tempArrayImg.push([fileReader.result, true, processedCount]);
+			//tempArrayImg.push([fileReader.result, true, $scope.processedCount]);
 			$scope.listImgThumb.push([fileReader.result, true]);
 			//console.log("null founded.");		
 		}	
@@ -400,8 +400,8 @@ angular.module('myApp')
 	$scope.clearImg = function(){
 		$scope.listImgThumb = [];
 		$scope.progress = 0;
-		processedCount= 0;
-		totalFiles = 0;
+		$scope.processedCount= 0;
+		$scope.totalFiles = 0;
 		// listOfEXIF = [];
   //   	listOfJSONFinal = [];
   //   	centerOfList = [];
