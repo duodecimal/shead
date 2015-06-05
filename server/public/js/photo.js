@@ -21,6 +21,7 @@ angular.module('myApp')
     var centerOfList = [];
     var idList = [];
     var listOfGPSEachFile = [];
+    var listOfGPSNearEachFile = [];
     var checkTotalHaveToClose = true;
     var maxDistance = 25;
     var tempArrayImg = [];
@@ -263,9 +264,11 @@ angular.module('myApp')
 		  		if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
 		  			if(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description) > maxDistance){
 		  				checkTotalHaveToClose = false; //some file so far than maxDistance
-		  				break;
+		  				listOfGPSNearEachFile.push(true);
+		  				//break;
 		  			}
 		  			else{
+		  				listOfGPSNearEachFile.push(false);
 		  				checkTotalHaveToClose = true; //all file have gps and close together
 		  			}
 		  		}
@@ -358,7 +361,7 @@ angular.module('myApp')
  	function onLoadEndHandler(fileReader, index){
 		//console.log(index);
 		$scope.processedCount++;
-		console.log($scope.processedCount);
+		//console.log($scope.processedCount);
 	  	//console.log(listOfGPSEachFile);
 	  	
 		if($scope.processedCount == $scope.totalFiles){ 
@@ -384,15 +387,16 @@ angular.module('myApp')
 
 	function onLoadHandler(fileReader, index){
 		
-		if(listOfGPSEachFile[$scope.processedCount] != null){
-			//tempArrayImg.push([fileReader.result, false, $scope.processedCount]);	
-			$scope.listImgThumb.push([fileReader.result, false]);	
-			//console.log($scope.processedCount-1);
+		if(listOfGPSEachFile[$scope.processedCount] != null){ //have gps
+			if(listOfGPSNearEachFile[$scope.processedCount] == false ){
+				$scope.listImgThumb.push([fileReader.result, false, false]); //close
+			}
+			else{
+				$scope.listImgThumb.push([fileReader.result, false, true]);	//far
+			}
 		}
 		else{
-			//tempArrayImg.push([fileReader.result, true, $scope.processedCount]);
-			$scope.listImgThumb.push([fileReader.result, true]);
-			//console.log("null founded.");		
+			$scope.listImgThumb.push([fileReader.result, true, null]);	//have not gps
 		}	
 		
 	}
