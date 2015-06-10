@@ -25,6 +25,7 @@ angular.module('myApp')
 	var nameList = [];
 	var indexToRemove = [];
 	var validatedFiles = [];
+	var allTags = [];
 
 	$scope.totalFiles = 0;
     $scope.listImgThumb = [];
@@ -32,7 +33,7 @@ angular.module('myApp')
     $scope.progress = 0;
     $scope.isDisable = false;
     $scope.processedCount= 0;
-    $scope.model = [];
+    //$scope.model = [];
     
 
     document.getElementById("js-upload-files").onclick = function(e) {
@@ -119,7 +120,15 @@ angular.module('myApp')
 		}
 	}
 
+	function getTagsFromView(){
+		allTags = [];
+		for(var i = 0 ; i < t.getValues().length ; i++){
+			allTags.push(t.getValues()[i][1]);	
+		}
+	}
+
     $scope.submitPhoto = function(){
+    	getTagsFromView();
     	$scope.isDisable = true;
     	//console.log(listOfEXIF);
     	for(var i = 0 ; i < listOfEXIF.length ; i++){
@@ -466,13 +475,13 @@ angular.module('myApp')
 
 		//console.log(assetsObj);
 
-		tagsObj = ($scope.model.tags).split(',');
-		for(var i = 0 ; i < tagsObj.length ; i++){
-			tagsObj[i] = tagsObj[i].trim();
-			if (i > -1 && tagsObj[i] == "") {
-		    	tagsObj.splice(i, 1);
-			}
-		}
+		// tagsObj = ($scope.model.tags).split(',');
+		// for(var i = 0 ; i < tagsObj.length ; i++){
+		// 	tagsObj[i] = tagsObj[i].trim();
+		// 	if (i > -1 && tagsObj[i] == "") {
+		//     	tagsObj.splice(i, 1);
+		// 	}
+		// }
 
 		//for true format of Date
 		var dateString = window.JSON.stringify(new Date);
@@ -483,7 +492,7 @@ angular.module('myApp')
 		    "created": dateObj,
 		    "updated": dateObj,
 		    "type": $scope.model.type,
-		    "tags": tagsObj,
+		    "tags": allTags,
 		    "loc": {
 		      "coordinates": coordinates,
 		      "type": "Point"
@@ -508,4 +517,11 @@ angular.module('myApp')
 	  }
 	});
 
+	var t = new $.TextboxList('#form_tags_input', {
+		bitsOptions:{
+			editable:{
+				addKeys: [188,186,13,9],
+			}
+		},max: 20, unique: true
+	});
 });

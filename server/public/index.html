@@ -1,33 +1,35 @@
 <html>
 <head>
-	<title>Shead & Share</title>
+  <title>Shead & Share</title>
   <script src="node_modules/angular-file-upload/dist/angular-file-upload-shim.min.js"></script> 
-	<script src="bower_components/angularjs/angular.min.js"></script>
+  <script src="bower_components/angularjs/angular.min.js"></script>
   <script src="node_modules/angular-file-upload/dist/angular-file-upload.min.js"></script> 
-	<script src="bower_components/jquery/dist/jquery.min.js"></script>
-	<script src="bower_components/exifreader/js/ExifReader.js"></script>
-	<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
+  <script src="bower_components/exifreader/js/ExifReader.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
   <script src="bower_components/angular-thumbnail/angular-thumbnail.min.js"></script>
   <script src="bower_components/angular-filereader/angular-filereader.min.js"></script>
-  <!--<script src="bower_components/angular-gsapify-router/angular-gsapify-router.js"></script>-->
-  <!--<script src="bower_components/angular-animate/angular-animate.min.js"></script>-->
-  <!-- <script src="bower_components/angular-ui-router-anim-in-out/anim-in-out.js"></script> -->
-	<script src="js/app.js"></script>
+
+  <script src="bower_components/textboxlist-jquery/growinginput.js"></script>
+  <script src="bower_components/textboxlist-jquery/textboxlist.js"></script>   
+  <script src="bower_components/textboxlist-jquery/textboxlist.autocomplete.js"></script>
+  <script src="bower_components/textboxlist-jquery/textboxlist.autocomplete.binary.js"></script>
+
+  <script src="js/app.js"></script>
   <script src="js/photo.js"></script>
   <script src="js/video.js"></script>
   <script src="js/exif_ios.js"></script>  
   <script src="js/get_center.js"></script>
-	<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <!-- <link rel="stylesheet" href="bower_components/angular-ui-router-anim-in-out/css/anim-in-out.css"> -->
-	<link rel="stylesheet" href="css/myCss.css">
-  <!-- <link rel="stylesheet" href="css/animate.css"> -->
+  <script src="js/js_for_textboxlist.js"></script>
+
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/myCss.css">
+
+  <link rel="stylesheet" href="bower_components/textboxlist-jquery/textboxlist.css">
+  <link rel="stylesheet" href="bower_components/textboxlist-jquery/textboxlist.autocomplete.css">
+
 </head>
 <body ng-app="myApp">
-
-
-      <div ui-view></div>
-
-
-
+     <div ui-view></div>
 </body>
 </html>
