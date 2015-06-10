@@ -8,33 +8,31 @@ angular.module('myApp')
 		return;
 	}
 
-		var dropZone = document.getElementById('drop-zone');
-	    var uploadForm = document.getElementById('js-upload-form');
-	    var files;
-	    var exif_data;
-	    var listOfEXIF = [];
-	    var JSONObjFinal;
-	    var listOfJSONFinal = [];
-	    var centerOfList = [];
-	    var idList = [];
-	    var listOfGPSEachFile = [];
-	    var listOfGPSNearEachFile = [];
-	    var checkTotalHaveToClose = true;
-	    var maxDistance = 50;
-	    var tempArrayImg = [];
-	    var fileList = [];
-		var nameList = [];
-		var indexToRemove = [];
-		var validatedFiles = [];
+	var dropZone = document.getElementById('drop-zone');
+    var files;
+    var exif_data;
+    var listOfEXIF = [];
+    var JSONObjFinal;
+    var listOfJSONFinal = [];
+    var centerOfList = [];
+    var idList = [];
+    var listOfGPSEachFile = [];
+    var listOfGPSNearEachFile = [];
+    var checkTotalHaveToClose = true;
+    var maxDistance = 50;
+    var tempArrayImg = [];
+    var fileList = [];
+	var nameList = [];
+	var indexToRemove = [];
+	var validatedFiles = [];
 
-		$scope.totalFiles = 0;
-	    $scope.listImgThumb = [];
-	    $scope.percent = 0;
-	    $scope.progress = 0;
-	    $scope.isDisable = false;
-	    $scope.processedCount= 0;
-
-
+	$scope.totalFiles = 0;
+    $scope.listImgThumb = [];
+    $scope.percent = 0;
+    $scope.progress = 0;
+    $scope.isDisable = false;
+    $scope.processedCount= 0;
+    $scope.model = [];
     
 
     document.getElementById("js-upload-files").onclick = function(e) {
@@ -51,7 +49,7 @@ angular.module('myApp')
     document.getElementById("js-upload-files").onchange = function(e) {
     	createFileList(e.target.files);
         //files = e.target.files;
-        //console.log(files);
+        //console.log(files);       
         if(files.length != 0){
         	for (var i = 0; i < files.length; i++) {
         		if(!checkValueInList(indexToRemove, i)){
@@ -219,11 +217,13 @@ angular.module('myApp')
 		    //console.log($scope.percent);
 		    //console.log(evt);
 		  }).success(function(data, status, headers, config) {
+		  	//console.log(data);
 		    // file is uploaded successfully
 		    for(var i = 0 ; i < data.result.files.file.length ; i++){
 		    	console.log("Status : " + status + ", upload " + data.result.files.file[i].name + " complete!");	
 		    }
-		    
+		    getCoordinates(data.result.files.file);
+
 		    listOfEXIF = [];
 		    listOfJSONFinal = [];
 		    fileList = [];
@@ -313,7 +313,8 @@ angular.module('myApp')
 	}
 
 	$scope.cancelUpload = function(){
-		$scope.upload.abort();
+		console.log("test");
+		//$scope.upload.abort();
 		console.log("canceled.");
 		$timeout(function() {
 			$scope.percent = 0;
@@ -425,4 +426,86 @@ angular.module('myApp')
 		}
 		console.log(validatedFiles);
 	}
+
+	function getCoordinates(files){
+		var idListFromCallback = [];
+		var coordinates = [];
+		var newsObj;
+		var id;
+		for(var i = 0 ; i < files.length ; i++){
+			idListFromCallback.push((files[i].name).substring(0, (files[i].name).lastIndexOf('.')));
+		}
+		
+		id = idListFromCallback[0];
+		$http.get('http://shead.cloudapp.net:3000/api/ImageMetadatas/'+id)
+		.success(function(data, status, headers, config) {
+			coordinates.push(data["{GPS}"].Longitude);
+			coordinates.push(data["{GPS}"].Latitude);
+			postNews(files, coordinates);
+		})
+		.error(function(data, status, headers, config) {
+		
+		});
+
+
+	}
+
+	function postNews(files, coordinates){
+		var newsObj = [];
+		var assetsObj = [];
+		var tagsObj = [];
+		var d = new Date();
+
+		for(var i = 0 ; i < files.length ; i++){
+			assetsObj.push({
+				"imageMetadataId": (files[i].name).substring(0, (files[i].name).lastIndexOf('.')),
+		        "imageDownloadURL": "https://sheadimages.blob.core.windows.net/images/"+files[i].name,
+		        "type": "image"
+			})
+		}
+
+		//console.log(assetsObj);
+
+		tagsObj = ($scope.model.tags).split(',');
+		for(var i = 0 ; i < tagsObj.length ; i++){
+			tagsObj[i] = tagsObj[i].trim();
+			if (i > -1 && tagsObj[i] == "") {
+		    	tagsObj.splice(i, 1);
+			}
+		}
+
+		//for true format of Date
+		var dateString = window.JSON.stringify(new Date);
+		var dateObj = window.JSON.parse(dateString);
+
+		newsObj = {
+		    "title": $scope.model.title,
+		    "created": dateObj,
+		    "updated": dateObj,
+		    "type": $scope.model.type,
+		    "tags": tagsObj,
+		    "loc": {
+		      "coordinates": coordinates,
+		      "type": "Point"
+		    },
+		    "assets": assetsObj
+		}
+		//console.log(newsObj);
+
+		$http.post('http://shead.cloudapp.net:3000/api/News', newsObj)
+		.success(function(data, status, headers, config) {
+			console.log("Completed, news ID = "+data.id);
+		})
+		.error(function(data, status, headers, config) {
+			console.log(data);
+		});
+	}
+
+	$("#myForm").keypress(function(e) {
+	  //Enter key
+	  if (e.which == 13) {
+	    return false;
+	  }
+	});
+
 });

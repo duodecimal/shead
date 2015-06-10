@@ -1,5 +1,5 @@
-var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'ui.thumbnail', 'filereader'])
-.config(function($stateProvider, $urlRouterProvider, ThumbnailServiceProvider){
+var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'filereader'])
+.config(function($stateProvider, $urlRouterProvider){
       
     
     $stateProvider
@@ -13,12 +13,8 @@ var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'ui.thumbna
           templateUrl: "templates/upload_video.html",
           controller: "ctrlVideo"
       });
-    // For any unmatched url, send to /route1
-    $urlRouterProvider.otherwise("/photo");
-         
-    // ThumbnailServiceProvider.defaults.width = 150;
-    // ThumbnailServiceProvider.defaults.height = 150;
 
+    $urlRouterProvider.otherwise("/photo");
 
 
 })

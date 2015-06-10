@@ -1,0 +1,19 @@
+{
+  "name": "TextboxList",
+  "version": "0.5.0",
+  "authors": [
+    "Guillermo Rauch <rauchg@gmail.com>"
+  ],
+  "description": "Turns normal textboxes into a widget which can be navigated with the keyboard",
+  "main": "textboxlist.js",
+  "keywords": [
+    "jquery",
+    "plugin",
+    "select",
+    "form",
+    "ui",
+    "tags"
+  ],
+  "license": "Apache-2.0",
+  "homepage": "http://www.devthought.com/projects/jquery/textboxlist/"
+}

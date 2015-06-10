@@ -8,30 +8,10 @@
           <a ui-sref="video"><button type="button" class="btn btn-primary pull-right" style="margin-top: -7px">Upload video</button></a>
         </div>
         <div class="panel-body">
-
-          
-        <!--   <h4>Select files from your computer</h4>
-          <form enctype="multipart/form-data" id="js-upload-form">
-            <div class="form-inline">
-              <div class="form-group">
-                <input type="file" name="files[]" id="js-upload-files" multiple>
-              </div>
-              <button ng-click="submitPhoto()" class="btn btn-sm btn-primary" id="js-upload-submit">Upload files</button>
-            </div>
-          </form>  -->
-
-          <!-- <input type="text" ng-model="myModelObj"> -->
-          
+          <form id="myForm">
           <span class="btn btn-default btn-block btn-file">
               Browse <input type="file" ng-file-select="onFileSelect($files)" id="js-upload-files" accept="image/*" multiple>
           </span>
-
-         <!--  <input type="file" ng-file-select="onFileSelect($files)" multiple accept="image/*"> -->
-          
-          <!-- <div class="button" ng-file-select="onFileSelect($files)" data-multiple="true"></div> -->
-
-          <!-- <div ng-file-drop="onFileSelect($files)" ng-file-drag-over-class="optional-css-class-name-or-function"
-                ng-show="dropSupported">drop files here</div> -->
 
           <div ng-file-drop-available="dropSupported=true" 
                 ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
@@ -54,68 +34,54 @@
           <div ng-show="percent != 0">{{percent}}% Complete</div>
 
 
-          <button ng-click="cancelUpload()" class="btn btn-danger btn-block" ng-show="percent != 0 && percent != 100">Cancel Upload</button>
+          <button ng-click="cancelUpload()" class="btn btn-danger btn-block" ng-hide="percent == 0 || percent == 100">Cancel Upload</button>
 
 
           <div class="js-upload-finished">
-            <h3>Preview<button ng-click="clearImg()" class="btn btn-danger btn-sm pull-right" ng-hide="!listImgThumb.length">Clear</button></h3>
+            <h3>Preview
+
+              <button ng-click="clearImg()" class="btn btn-danger btn-sm pull-right" ng-hide="!listImgThumb.length">Clear
+              </button>
+            </h3>
             <div class="list-group">
               <i ng-hide="listImgThumb.length">No image choosed</i>
 
             <div class="img-review">
               <span ng-repeat="(key, value) in listImgThumb">
-                  <img ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2]}"/>
+                  <a ng-click="removeImg(key)"><img ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2]}"/>
                   <img ng-class="{'overlay_no_gps' : value[1],
-                  'overlay_far' : value[2]}"/>
+                  'overlay_far' : value[2]}"/></a>
               </span>
             </div>
-
+              
             </div>
           </div>
-
+          <small ng-hide="!listImgThumb.length">Click the picture to remove </small><br>
           <span ng-hide="totalFiles == processedCount"><b>Loading...</b>
             <!-- <progress value="{{progress}}"></progress> -->
             <img src="img/loading_spinner.gif" width="40px"/>
           </span>
 
-          <!-- Upload Finished -->
-          <!-- <div class="js-upload-finished">
-            <h3>Processed files</h3>
-            <div class="list-group">
-              <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-01.jpg</a>
-              <a href="#" class="list-group-item list-group-item-success"><span class="badge alert-success pull-right">Success</span>image-02.jpg</a>
-            </div>
-          </div> -->
           <h3>Shead</h3>
-          <input type="text" class="form-control" placeholder="Title">
+          <input type="text" class="form-control" placeholder="Title" ng-model="model.title" required>
           <br>
-          <select class="form-control">
-            <option selected>Type</option>
-            <option>- 1</option>
-            <option>- 2</option>
-            <option>- 3</option>
-            <option>- 4</option>
-            <option>- 5</option>
+          <select class="form-control" ng-model="model.type" ng-init="model.type = model.type || 'none'">
+            <option value="none">Type</option>
+            <option value="สังสรรค์">- สังสรรค์</option>
+            <option value="กรี๊ด">- กรี๊ด</option>
+            <option value="เหตุด่วน">- เหตุด่วน</option>
+            <option value="อุบัติเหตุ">- อุบัติเหตุ</option>
+            <option value="ขอความช่วยเหลือ">- ขอความช่วยเหลือ</option>
           </select>
           <br>
-          <input type="text" class="form-control" placeholder="Tags">
+          <input type="text" class="form-control" placeholder="Tags" ng-model="model.tags" required onkeydown="if (event.keyCode == 13) document.getElementById('js-upload-submit').click()">
           <br>
-          <button ng-click="submitPhoto()" class="btn btn-block btn-primary" id="js-upload-submit" ng-disabled="isDisable">Share</button>
+          <button ng-click="submitPhoto()" class="btn btn-block btn-primary" id="js-upload-submit" ng-disabled="isDisable" type="submit">Share</button>
+        </form>
         </div>
 
       </div>
     </div> <!-- /container -->
   <br>
-
-  <!-- <table class="table table-hover">
-      <thead>
-        <tr class="active">
-          <th>Tag name</th>
-          <th>Tag value</th>
-        </tr>
-      </thead>
-      <tbody id="exif-table-body">
-      </tbody>
-    </table> -->
 
 </body>

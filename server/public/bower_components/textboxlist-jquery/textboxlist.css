@@ -1,0 +1,51 @@
+/*
+		This stylesheet belongs to TextboxList - Copyright Guillermo Rauch <http://devthought.com> 2009
+		TextboxList is not priceless for commercial use. See <http://devthought.com/projects/jquery/textboxlist/>
+		Purchase to remove copyright
+*/
+
+.textboxlist { font: 11px "Lucida Grande", Verdana; cursor: text; }
+.textboxlist-bits {
+	background-color: #FFFFFF;
+	background-image: none;
+	border: 1px solid #CCCCCC;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+	color: #555555;
+	display: block;
+	padding: 6px 12px 2px;
+	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+	width: 100%;
+	overflow: hidden;
+}
+.textboxlist-bit { background: transparent; list-style-type: none; float: left; display: block; padding: 0; margin: 0 5px 3px 0; cursor: default; }
+.textboxlist-bit-editable { border: none; }
+.textboxlist-bit-editable-input { background: transparent; border: 0; padding: 2px 0; *padding-bottom: 0; height: 18px; font: 11px "Lucida Grande", Verdana; }
+.textboxlist-bit-editable-input:focus { outline: 0; }
+.textboxlist-bit-box { font-size: 12px; position: relative; line-height: 18px; padding: 0 5px; -moz-border-radius: 9px; -webkit-border-radius: 9px; border-radius: 9px; border: 1px solid #CAD8F3; background: #DEE7F8; cursor: default; }
+.textboxlist-bit-box-deletable { padding-right: 15px; }
+.textboxlist-bit-box-deletebutton,
+ form .tagsBox ul li a.textboxlist-bit-box-deletebutton {margin-right:2px; padding:0; position: absolute; right: 4px; top: 6px; display: block; width: 7px; height: 7px; font-size: 1px; background: url('close.gif'); }
+.textboxlist-bit-box-deletebutton:hover { border: none; background-position: 7px; text-decoration: none; }
+.textboxlist-bit-box-hover { background: #BBCEF1; border: 1px solid #6D95E0; }
+.textboxlist-bit-box-focus { border-color: #598BEC; background: #598BEC; color: #fff; }
+.textboxlist-bit-box-focus .textboxlist-bit-box-deletebutton { background-position: bottom; }
+
+.textboxlist-focus ul.textboxlist-bits {
+	border: 1px solid #66AFE9;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+	outline: 0 none;
+}
+
+.tagsBox ul li{
+	border:none;
+}
+
+	.tagsBox ul li.textboxlist-bit-box-deletable{
+		padding:0 17px 0 10px;
+	}
+
+form .tagsBox input[type="text"]{
+	border:0;
+	background-image:none;
+}
