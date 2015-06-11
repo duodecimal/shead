@@ -33,24 +33,22 @@
           </div>
           <div ng-show="percent != 0">{{percent}}% Complete</div>
 
-
-          <button ng-click="cancelUpload()" class="btn btn-danger btn-block" ng-hide="percent == 0 || percent == 100">Cancel Upload</button>
-
+          <input ng-click="cancelUpload()" class="btn btn-danger btn-block"  value="Cancel Upload" ng-hide="percent == 0 || percent == 100" type="button">
 
           <div class="js-upload-finished">
             <h3>Preview
 
-              <button ng-click="clearImg()" class="btn btn-danger btn-sm pull-right" ng-hide="!listImgThumb.length">Clear
-              </button>
+              <input ng-click="clearImg()" class="btn btn-danger btn-sm pull-right" ng-hide="!listImgThumb.length" value="Clear" type="button">
+
             </h3>
             <div class="list-group">
               <i ng-hide="listImgThumb.length">No image choosed</i>
 
             <div class="img-review">
               <span ng-repeat="(key, value) in listImgThumb">
-                  <a ng-click="removeImg(key)"><img ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2]}"/>
+                  <a ng-click="removeImg(key)"><img ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2]}">
                   <img ng-class="{'overlay_no_gps' : value[1],
-                  'overlay_far' : value[2]}"/></a>
+                  'overlay_far' : value[2]}"></a>
               </span>
             </div>
               
@@ -59,7 +57,7 @@
           <small ng-hide="!listImgThumb.length">Click the picture to remove </small><br>
           <span ng-hide="totalFiles == processedCount"><b>Loading...</b>
             <!-- <progress value="{{progress}}"></progress> -->
-            <img src="img/loading_spinner.gif" width="40px"/>
+            <img src="img/loading_spinner.gif" width="40px">
           </span>
 
           <h3>Shead</h3>
@@ -87,7 +85,7 @@
           <div class="form-group">
             <label for="inputEmail3" class="col-sm-1 control-label">Tags</label>
             <div class="col-sm-11">
-              <input placeholder="Tags" type="text" name="test" value="" id="form_tags_input" class="form-control"/>
+              <input placeholder="Tags" type="text" name="test" value="" id="form_tags_input" class="form-control">
             </div>
           </div>
 

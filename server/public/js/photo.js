@@ -322,9 +322,8 @@ angular.module('myApp')
 	}
 
 	$scope.cancelUpload = function(){
-		console.log("test");
-		//$scope.upload.abort();
-		console.log("canceled.");
+		$scope.upload.abort();
+		console.log("Canceled.");
 		$timeout(function() {
 			$scope.percent = 0;
 		}, 10);
