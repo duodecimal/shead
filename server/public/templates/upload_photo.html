@@ -3,15 +3,51 @@
   <div class="container">
       <div class="panel panel-default">
         <div class="panel-heading">
-          <strong>Upload Files</strong>
-          <small>Get metadata and upload file</small>
-          <a ui-sref="video"><button type="button" class="btn btn-primary pull-right" style="margin-top: -7px">Upload video</button></a>
+          <strong>Shead</strong>
+          <small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
+          <!-- <a ui-sref="video"><button type="button" class="btn btn-primary pull-right" style="margin-top: -7px">Upload video</button></a> -->
         </div>
         <div class="panel-body">
           <form id="myForm"  class="form-horizontal" ng-submit="submitPhoto()">
-          <span class="btn btn-default btn-block btn-file">
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-1 control-label">Title</label>
+            <div class="col-sm-11">
+              <input type="text" class="form-control" ng-model="model.title" required autofocus> 
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-1 control-label">Type</label>
+            <div class="col-sm-11">
+                <select class="form-control" ng-model="model.type" ng-init="model.type = model.type || 'none'">
+                  <option value="none">None</option>
+                  <option value="สังสรรค์">- สังสรรค์</option>
+                  <option value="กรี๊ด">- กรี๊ด</option>
+                  <option value="เหตุด่วน">- เหตุด่วน</option>
+                  <option value="อุบัติเหตุ">- อุบัติเหตุ</option>
+                  <option value="ขอความช่วยเหลือ">- ขอความช่วยเหลือ</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-1 control-label">Tags</label>
+            <div class="col-sm-11">
+              <input placeholder="Tags" type="text" name="test" value="" id="form_tags_input" class="form-control">
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <label for="inputEmail3" class="col-sm-1 control-label">Files</label>
+            <div class="col-sm-11">
+              <span class="btn btn-default btn-block btn-file">
               Browse <input type="file" ng-file-select="onFileSelect($files)" id="js-upload-files" accept="image/*" multiple>
-          </span>
+              </span>
+            </div>
+          </div>
+
+
+          
 
           <div ng-file-drop-available="dropSupported=true" 
                 ng-show="!dropSupported">HTML5 Drop File is not supported!</div>
@@ -60,39 +96,9 @@
             <img src="img/loading_spinner.gif" width="40px">
           </span>
 
-          <h3>Shead</h3>
-          
-          <div class="form-group">
-            <label for="inputEmail3" class="col-sm-1 control-label">Title</label>
-            <div class="col-sm-11">
-              <input type="text" class="form-control" ng-model="model.title" required autofocus> 
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="inputEmail3" class="col-sm-1 control-label">Type</label>
-            <div class="col-sm-11">
-                <select class="form-control" ng-model="model.type" ng-init="model.type = model.type || 'none'">
-                  <option value="none">None</option>
-                  <option value="สังสรรค์">- สังสรรค์</option>
-                  <option value="กรี๊ด">- กรี๊ด</option>
-                  <option value="เหตุด่วน">- เหตุด่วน</option>
-                  <option value="อุบัติเหตุ">- อุบัติเหตุ</option>
-                  <option value="ขอความช่วยเหลือ">- ขอความช่วยเหลือ</option>
-              </select>
-            </div>
-          </div>
-          
-          <div class="form-group">
-            <label for="inputEmail3" class="col-sm-1 control-label">Tags</label>
-            <div class="col-sm-11">
-              <input placeholder="Tags" type="text" name="test" value="" id="form_tags_input" class="form-control">
-            </div>
-          </div>
+          <br>
 
-         <!--  <input type="text" class="form-control" placeholder="Tags" ng-model="model.tags" required onkeydown="if (event.keyCode == 13) document.getElementById('js-upload-submit').click()">
-          <br> -->
-
-          <button class="btn btn-block btn-primary" id="js-upload-submit" ng-disabled="isDisable" type="submit" >Share</button>
+          <button class="btn btn-block btn-primary" id="js-upload-submit" ng-disabled="isDisable" type="submit">Share</button>
         </form>
         </div>
 
