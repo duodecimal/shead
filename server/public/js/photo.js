@@ -23,7 +23,6 @@ angular.module('myApp')
     var tempArrayImg = [];
     var fileList = [];
 	var nameList = [];
-	var indexToRemove = [];
 	var validatedFiles = [];
 	var allTags = [];
 
@@ -53,9 +52,7 @@ angular.module('myApp')
         //console.log(files);       
         if(files.length != 0){
         	for (var i = 0; i < files.length; i++) {
-        		if(!checkValueInList(indexToRemove, i)){
-        			handleFile(files[i], i);		
-        		}
+       			handleFile(files[i], i);		
 			}
 			$timeout(function() {
 				checkNearBy();
@@ -75,6 +72,7 @@ angular.module('myApp')
 			myFileList.push(fileListOriginal[i]);
 		}
 		files = sortFile(myFileList);
+		console.log(files);
     }
 
     function sortFile(fileBeforeSort){
@@ -128,13 +126,12 @@ angular.module('myApp')
 	}
 
     $scope.submitPhoto = function(){
+    	listOfJSONFinal = [];
     	getTagsFromView();
     	$scope.isDisable = true;
     	//console.log(listOfEXIF);
     	for(var i = 0 ; i < listOfEXIF.length ; i++){
-    		if(!checkValueInList(indexToRemove, i)){
-    			listOfJSONFinal.push(findExif(listOfEXIF[i]));
-    		}
+   			listOfJSONFinal.push(findExif(listOfEXIF[i]));
     	}
 
 		//console.log(listOfJSONFinal);
@@ -147,7 +144,7 @@ angular.module('myApp')
 			    	console.log("Status : " + status + ", ID : "+data[i].id+", save metadata complete!");
 			    	idList.push(data[i].id);
 			    }
-			    	uploadImg(idList); 
+			    	//uploadImg(idList); 
 			})
 			.error(function(data, status, headers, config) {
 			    
@@ -164,19 +161,16 @@ angular.module('myApp')
     dropZone.ondrop = function(e) {
         e.preventDefault();
         this.className = 'upload-drop-zone';
-        //handleFile(e.dataTransfer.files);
-        //files = e.dataTransfer.files;
         createFileList(e.dataTransfer.files);
-        //console.log(files);
-        //console.log(files);
+
         if(files.length != 0){
 	        for (var i = 0; i < files.length; i++) {
 			    handleFile(files[i], i);
 			}
 			$timeout(function() {
-					checkNearBy();
-			}, 10);	
-			showThumbnail(e);
+				checkNearBy();
+				showThumbnail(e);
+			}, 1000);
 		}
 		else{
         	listOfEXIF = [];
@@ -200,9 +194,6 @@ angular.module('myApp')
 	
 	uploadImg = function(idList) {
 		for(var i = 0 ; i < files.length ; i++){
-			if(!checkValueInList(indexToRemove, i)){
-				fileList.push(files[i]);
-			}
 			nameList.push(idList[i] + (files[i].type === "image/jpeg" ? ".jpg" : ""));
 		}
 
@@ -213,7 +204,7 @@ angular.module('myApp')
 		    //headers: {'header-key': 'header-value'}, 
 		    //withCredentials: true, 
 		    //data: {myObj: "test11111111"},
-		    file: fileList, // or list of files ($files) for html5 only 
+		    file: files, // or list of files ($files) for html5 only 
 		    //fileName: id + (file.type === "image/jpeg" ? ".jpg" : "")
 		    fileName: nameList,
 		    // customize file formData name ('Content-Desposition'), server side file variable name.  
@@ -281,27 +272,25 @@ angular.module('myApp')
 	  		for(var i = 0 ; i < listOfEXIF.length ; i++){
 		  		if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
 		  			if(calculateDistance(centerOfList[0],centerOfList[1],listOfEXIF[i].GPSLatitude.description,listOfEXIF[i].GPSLongitude.description) > maxDistance){
-		  				checkTotalHaveToClose = false; //some file so far than maxDistance
 		  				listOfGPSNearEachFile.push(true); //true mean far
-		  				//break;
 		  			}
 		  			else{
 		  				listOfGPSNearEachFile.push(false);
-		  				checkTotalHaveToClose = true; //all file have gps and close together
 		  			}
 		  		}
 		  		else{
-		  			checkTotalHaveToClose = false; //some file not have GPS
 		  			listOfGPSNearEachFile.push(null);
-		  			//break;
 		  		}
 	  		}
-	  		if(checkTotalHaveToClose){
-	  			console.log("Can be uploaded");
-	  		}
-	  		else{
-	  			console.log("GPS point not close");
-	  		}
+
+	  		if(checkValueInList(listOfGPSNearEachFile, null) || checkValueInList(listOfGPSNearEachFile, true)){
+				//console.log("cannot upload");
+				checkTotalHaveToClose = false; //some file not have GPS or invalid distance
+			}
+			else{
+				console.log("can upload");
+				checkTotalHaveToClose = true; //all file have gps and close together
+			}
   		}
   		
   	}
@@ -400,39 +389,26 @@ angular.module('myApp')
 		$scope.totalFiles = 0;
 		listOfGPSEachFile = [];
 		centerOfList = [];
+		listOfJSONFinal = [];
 	}
 
 	$scope.removeImg = function(index){
-		//console.log(index);	
 		if (index > -1) {
 		    $scope.listImgThumb.splice(index, 1);
-		    //listOfEXIF.splice(index, 1);
-		    indexToRemove.push(index);
-		    //console.log(files);
-		    checkNearBy();
-		    //files.splice(index, 1);
-		    //fileList.splice(index, 1);
-		    //nameList.splice(index, 1);
-		    
-		    //listOfGPSEachFile = [];
-			//listOfGPSNearEachFile = [];
-		    //checkNearBy();
+		    processAfterRemove(index);
 		}
-		//console.log($scope.listImgThumb);
+	}
+
+	function processAfterRemove(index){
+		files.splice(index, 1);
+		listOfEXIF.splice(index, 1);
+		listOfGPSNearEachFile = [];
+		listOfJSONFinal = [];
+		checkNearBy();
 	}
 
 	function checkValueInList(list, value){
 		return!!~list.indexOf(value)
-	}
-
-	function myFileList(e){
-		console.log(e);
-
-		var files = e;
-		for(var i = 0 ; i < e.length ; i++){
-			validatedFiles.push(e[i]);
-		}
-		console.log(validatedFiles);
 	}
 
 	function getCoordinates(files){
@@ -472,17 +448,6 @@ angular.module('myApp')
 			})
 		}
 
-		//console.log(assetsObj);
-
-		// tagsObj = ($scope.model.tags).split(',');
-		// for(var i = 0 ; i < tagsObj.length ; i++){
-		// 	tagsObj[i] = tagsObj[i].trim();
-		// 	if (i > -1 && tagsObj[i] == "") {
-		//     	tagsObj.splice(i, 1);
-		// 	}
-		// }
-
-		//for true format of Date
 		var dateString = window.JSON.stringify(new Date);
 		var dateObj = window.JSON.parse(dateString);
 
@@ -498,15 +463,15 @@ angular.module('myApp')
 		    },
 		    "assets": assetsObj
 		}
-		//console.log(newsObj);
+		console.log(newsObj);
 
-		$http.post('http://shead.cloudapp.net:3000/api/News', newsObj)
-		.success(function(data, status, headers, config) {
-			console.log("Completed, news ID = "+data.id);
-		})
-		.error(function(data, status, headers, config) {
-			console.log(data);
-		});
+		// $http.post('http://shead.cloudapp.net:3000/api/News', newsObj)
+		// .success(function(data, status, headers, config) {
+		// 	console.log("Completed, news ID = "+data.id);
+		// })
+		// .error(function(data, status, headers, config) {
+		// 	console.log(data);
+		// });
 	}
 
 	$("#myForm").keypress(function(e) {
