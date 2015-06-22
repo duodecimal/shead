@@ -13,7 +13,8 @@ var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'filereader
           templateUrl: "templates/upload_video.html",
           controller: "ctrlVideo"
       });
-
+      
+      // .otherwise({redirectTo: '/photo'});
     $urlRouterProvider.otherwise("/photo");
 
 
