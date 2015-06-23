@@ -1,4 +1,4 @@
-var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'filereader'])
+var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'filereader', 'ngAnimate'])
 .config(function($stateProvider, $urlRouterProvider){
       
     

@@ -485,10 +485,9 @@ angular.module('myApp')
 	var t = new $.TextboxList('#form_tags_input', {
 		bitsOptions:{
 			editable:{
-				addKeys: [188,186,13,9],
+				addKeys: [32,13,9],
 			}
 		},max: 20, unique: true
 	});
-
 
 });
