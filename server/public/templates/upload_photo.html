@@ -1,7 +1,6 @@
 <body ng-controller="photoCtrl">
   <br>
   <div class="container">
-      
       <div class="panel panel-default">
         <div class="panel-heading">
           <strong>Shead</strong>
@@ -82,7 +81,7 @@
               <i ng-hide="listImgThumb.length">No image choosed</i>
 
             <div class="img-review">
-              <span ng-repeat="(key, value) in listImgThumb">
+              <span ng-repeat="(key, value) in listImgThumb" class="scale-fade">
                   <a ng-click="removeImg(key)"><img ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2]}">
                   <img ng-class="{'overlay_no_gps' : value[1],
                   'overlay_far' : value[2]}"></a>

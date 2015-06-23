@@ -490,4 +490,14 @@ angular.module('myApp')
 		},max: 20, unique: true
 	});
 
+//===============================================================
+	$scope.items = [];
+
+	$scope.push = function() {
+		$scope.items.push(+new Date());
+	};
+
+	$scope.pop = function() {
+		$scope.items.pop();
+	};
 });
