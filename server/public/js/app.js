@@ -1,7 +1,5 @@
-var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'filereader', 'ngAnimate'])
-.config(function($stateProvider, $urlRouterProvider){
-      
-    
+var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'filereader', 'ngAnimate', 'uiGmapgoogle-maps']);
+app.config(function($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider){
     $stateProvider
       .state('photo', {
           url: "/photo",
@@ -12,10 +10,18 @@ var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'filereader
           url: "/video",
           templateUrl: "templates/upload_video.html",
           controller: "ctrlVideo"
+      })
+      .state('map', {
+          url: "/map",
+          templateUrl: "templates/map.html",
+          controller: "ctrlMap"
       });
       
-      // .otherwise({redirectTo: '/photo'});
     $urlRouterProvider.otherwise("/photo");
 
-
+    uiGmapGoogleMapApiProvider.configure({
+        //    key: 'your api key',
+        v: '3.17',
+        libraries: 'weather,geometry,visualization'
+    });
 })
