@@ -19,7 +19,10 @@ angular.module('myApp')
 
   function createMarker(data){
       var marker;
+      var infowindow = [];
+      //console.log(data);
       for(var i = 0 ; i < data.length ; i++){
+        infowindow[i] = new google.maps.InfoWindow();
           marker = {
           id: data[i].id,
           coords: {
@@ -31,15 +34,38 @@ angular.module('myApp')
             draggable: false ,
             animation: google.maps.Animation.DROP,
             title: data[i].title,
-            index: i
+            index: i,
+            id: data[i].id,
+            created: data[i].created,
+            type: data[i].type,
+            updated: data[i].updated,
+            tags: data[i].tags,
+            loc: data[i].loc,
+            assets: data[i].assets
           },
           events: {
             click: function (marker, eventName, args) {
-              infowindow = new google.maps.InfoWindow({
-                  content: marker.title,
-                  maxWidth: 200
+              var stringImg = "";
+              for(var i = 0 ; i <  marker.assets.length ; i++){
+                stringImg += "<img style='padding:2px;width:150px;' src='"+marker.assets[i].imageDownloadURL+"'>";
+              }
+              //console.log(stringImg);
+              contentString = '<h4>'+marker.title+'</h4>'+
+                              '<br>'+stringImg+'<br>'+
+                              '<b>Tags</b>: '+marker.tags+'<br>'+
+                              '<b>Created</b>: '+marker.created+'<br>'+
+                              '<b>Updated</b>: '+marker.updated;
+                              
+              //console.log(marker.assets[0].imageDownloadURL);
+              infowindow[marker.index].setContent(contentString);
+              infowindow[marker.index].setOptions({maxWidth: 500});
+              infowindow[marker.index].open(this.map, marker);
+
+              google.maps.event.addListener(infowindow[marker.index], 'closeclick', function(){
+                //console.log("close");
               });
-              infowindow.open(this.map, marker);
+
+              infowindow[marker.index].setZIndex(99);
             }
           }
         };
