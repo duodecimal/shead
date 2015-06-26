@@ -33,7 +33,7 @@
                                   (i.e. lastRow setting is not considered) */
       fixedHeight : false,
       waitThumbnailsLoad : true,
-      captions : true,
+      captions : false,
       cssAnimation: false,
       imagesAnimationDuration : 500, // ignored with css animations
       captionSettings : { // ignored with css animations

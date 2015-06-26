@@ -13,6 +13,19 @@ app.use(express.static(__dirname + '/public'));
 //app.use(bodyParser.json({limit: '50mb'}, {uploadDir:'./uploads'}));
 app.use(bodyParser.json());
 
+
+app.all('/', function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+ });
+
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
+  next();
+});
+
 //app.use(multer({ dest: './uploads/'}))
 //app.use(express.bodyParser({limit: '50mb'}));
 
@@ -29,8 +42,6 @@ app.post('/file-upload', function(req, res, next) {
     console.log(req.body);
     console.log(req.files);
 });
-
-
 
 http.listen(port, function () {
   console.log("server is running now at http://localhost:"+port);

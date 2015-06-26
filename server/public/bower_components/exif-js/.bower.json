@@ -1,0 +1,31 @@
+{
+  "name": "exif-js",
+  "homepage": "https://github.com/jseidelin/exif-js",
+  "authors": [
+    "Jacob Seidelin"
+  ],
+  "description": "JavaScript library for reading EXIF image metadata",
+  "main": "exif.js",
+  "keywords": [
+    "exif"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "spec",
+    "example"
+  ],
+  "_release": "fdf760cf40",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "fdf760cf40ae24749a8b7f8ab6550bd98fd70539"
+  },
+  "_source": "git://github.com/jseidelin/exif-js.git",
+  "_target": "*",
+  "_originalSource": "jseidelin/exif-js"
+}

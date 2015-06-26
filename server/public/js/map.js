@@ -3,9 +3,9 @@ angular.module('myApp')
 .controller('ctrlMap', function($scope, $http, $timeout, uiGmapGoogleMapApi){
   $scope.markers = [];
   $http.get('http://shead.cloudapp.net:3000/api/News')
-  .success(function(data, status, headers, config) {
+  .success(function(dataNews, status, headers, config) {
     //console.log(data);
-    createMarker(data);
+    createMarker(dataNews);
   })
   .error(function(data, status, headers, config) {
 
@@ -17,7 +17,7 @@ angular.module('myApp')
 
   //uiGmapGoogleMapApi.then(function(maps) {
 
-  function createMarker(data){
+  function createMarker(data, orientation){
       var marker;
       var infowindow = [];
       //console.log(data);
@@ -47,11 +47,12 @@ angular.module('myApp')
             click: function (marker, eventName, args) {
               var stringImg = "";
               for(var i = 0 ; i <  marker.assets.length ; i++){
-                stringImg +=  '<a href="'+marker.assets[i].imageDownloadURL+'"><img src="'+marker.assets[i].imageDownloadURL+'"></a>';
+                stringImg +=  '<a href="'+marker.assets[i].imageDownloadURL+'"><img  src="'+marker.assets[i].imageDownloadURL+'"></a>';
               }
+
               //console.log(stringImg);
               contentString = '<h4>'+marker.title+'</h4>'+
-                              '<div class="colorboxEx justifylastrow" style="width:300px">'+
+                              '<div class="colorboxEx justifylastrow" style="width:500px">'+
                               stringImg+
                               '</div>'+
                               '<b>Tags</b>: '+marker.tags+'<br>'+
@@ -64,6 +65,8 @@ angular.module('myApp')
 
               google.maps.event.addListener(infowindow[marker.index], 'closeclick', function(){
                 //console.log("close");
+                imgIDs = [];
+                orientationList = [];
               });
 
               infowindow[marker.index].setZIndex(99);
@@ -85,8 +88,8 @@ angular.module('myApp')
 
                   $(".justifylastrow").justifiedGallery({
                       lastRow: 'justify',
-                      rowHeight: 150,
-                      maxRowHeight: 150
+                      rowHeight: 70,
+                      maxRowHeight: 70
                   });
               });
             }

@@ -82,10 +82,7 @@
             <div class="img-review">
               <span ng-repeat="(key, value) in listImgThumb" class="scale-fade">
                   <a ng-click="removeImg(key)">
-                    <img ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2],
-                     'rotage90cw' : value[3] == 6,
-                     'rotage90ccw' : value[3] == 8,
-                     'rotage180' : value[3] == 3}">
+                    <img img-fix-orientation="value[0]" ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2]}">
                     <img ng-class="{'overlay_no_gps' : value[1],
                   'overlay_far' : value[2]}">
                   </a>

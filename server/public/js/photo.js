@@ -68,6 +68,7 @@ angular.module('myApp')
     	var myFileList = [];
     	fileLength = fileListOriginal.length;
 		for(var i = 0 ; i < fileLength ; i++){
+			//not push file if no exit data (not implemented)
 			myFileList.push(fileListOriginal[i]);
 		}
 		if(files.length == 0){
@@ -243,7 +244,7 @@ angular.module('myApp')
     }
 
   	checkNearBy = function(){
-  		console.log(listOfEXIF);
+  		//console.log(listOfEXIF);
   		for(var i = 0 ; i < listOfEXIF.length ; i++){
   			if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
   				listOfGPSEachFile.push([listOfEXIF[i].GPSLatitude.description, listOfEXIF[i].GPSLongitude.description]);	
@@ -358,7 +359,7 @@ angular.module('myApp')
 		if($scope.processedCount == $scope.totalFiles){ 
 			$timeout(function() {
 				//do_somethings
-				console.log($scope.listImgThumb);
+				//console.log($scope.listImgThumb);
 			}, 10);
 		}
 

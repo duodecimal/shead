@@ -1,4 +1,8 @@
-var app = angular.module('myApp', ['ui.router', 'angularFileUpload', 'filereader', 'ngAnimate', 'uiGmapgoogle-maps', 'angular-loading-bar']);
+var app = angular.module('myApp', [
+  'ui.router', 'angularFileUpload', 'filereader', 'ngAnimate', 'uiGmapgoogle-maps', 
+  'angular-loading-bar', 'cp.ng.fix-image-orientation'
+]);
+
 app.config(function($stateProvider, $urlRouterProvider, uiGmapGoogleMapApiProvider){
     $stateProvider
       .state('photo', {
