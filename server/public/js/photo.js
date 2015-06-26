@@ -57,7 +57,7 @@ angular.module('myApp')
 				checkNearBy();
 				showThumbnail();
 			}, 1000);	
-
+			
         }
         else{
         	listOfEXIF = [];
@@ -242,8 +242,8 @@ angular.module('myApp')
 
     }
 
-
   	checkNearBy = function(){
+  		console.log(listOfEXIF);
   		for(var i = 0 ; i < listOfEXIF.length ; i++){
   			if(listOfEXIF[i].GPSLatitude != undefined && listOfEXIF[i].GPSLongitude != undefined){
   				listOfGPSEachFile.push([listOfEXIF[i].GPSLatitude.description, listOfEXIF[i].GPSLongitude.description]);	
@@ -358,6 +358,7 @@ angular.module('myApp')
 		if($scope.processedCount == $scope.totalFiles){ 
 			$timeout(function() {
 				//do_somethings
+				console.log($scope.listImgThumb);
 			}, 10);
 		}
 
@@ -369,14 +370,31 @@ angular.module('myApp')
 	function onLoadHandler(fileReader, index, length){
 		if(listOfGPSEachFile[files.length - length + $scope.processedCount] != null){ //have gps
 			if(listOfGPSNearEachFile[files.length - length + $scope.processedCount] == false ){
-				$scope.listImgThumb.push([fileReader.result, false, false]); //close
+				if(listOfEXIF[files.length - length + $scope.processedCount].Orientation != undefined){
+					$scope.listImgThumb.push([fileReader.result, false, false, listOfEXIF[files.length - length + $scope.processedCount].Orientation.value]); //close	
+				}
+				else{
+					$scope.listImgThumb.push([fileReader.result, false, false, null]); //close	
+				}
 			}
 			else{
-				$scope.listImgThumb.push([fileReader.result, false, true]);	//far
+				if(listOfEXIF[files.length - length + $scope.processedCount].Orientation != undefined){
+					$scope.listImgThumb.push([fileReader.result, false, true, listOfEXIF[files.length - length + $scope.processedCount].Orientation.value]);	//far	
+				}
+				else{
+					$scope.listImgThumb.push([fileReader.result, false, true, null]);	//far	
+				}
+				
 			}
 		}
 		else{
-			$scope.listImgThumb.push([fileReader.result, true, null]);	//have not gps
+			if(listOfEXIF[files.length - length + $scope.processedCount].Orientation != undefined){
+				$scope.listImgThumb.push([fileReader.result, true, null, listOfEXIF[files.length - length + $scope.processedCount].Orientation.value]);	//have not gps	
+			}
+			else{
+				$scope.listImgThumb.push([fileReader.result, true, null, null]);	//have not gps	
+			}
+			
 		}	
 		
 	}
@@ -490,14 +508,4 @@ angular.module('myApp')
 		},max: 20, unique: true
 	});
 
-//===============================================================
-	$scope.items = [];
-
-	$scope.push = function() {
-		$scope.items.push(+new Date());
-	};
-
-	$scope.pop = function() {
-		$scope.items.pop();
-	};
 });

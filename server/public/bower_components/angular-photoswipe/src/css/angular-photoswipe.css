@@ -1,0 +1,22 @@
+.photoswipe-gallery {
+	font-family: 'Arial', 'Helvetica', 'sans-serif';
+	width: 100%;
+	float: left;
+	padding: 10px;
+}
+
+.photoswipe-gallery > figure {
+	display: block;
+  	float: left;
+  	margin: 0 5px 5px 0;
+  	
+}
+
+.photoswipe-gallery > figure > figcaption {
+	padding: 10px;
+}
+
+.photoswipe-gallery img {
+  width: 100%;
+  height: auto;
+}

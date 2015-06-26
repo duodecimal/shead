@@ -1,5 +1,5 @@
 <body ng-controller="mapCtrl">
-<br>
+  <br>
   <div class="container col-xs-12 col-md-10 col-md-offset-1">
       <div class="panel panel-default">
         <div class="panel-heading">
@@ -7,14 +7,12 @@
           <a ui-sref="photo"><button type="button" class="btn btn-sm btn-primary pull-right" style="margin-top:-5px">Upload</button></a>      
         </div>
         <div class="panel-body">
-          	<ui-gmap-google-map center="map.center" zoom="map.zoom" options="options" bounds="map.bounds" control="">
-  	        	<!-- <ui-gmap-markers models="markers" coords="'self'" icon="'icon'" options="markoptions" click="alert()">
-  	        	</ui-gmap-markers> -->
+            <ui-gmap-google-map center="map.center" zoom="map.zoom" options="options" bounds="map.bounds" control="">
               <ui-gmap-marker coords="marker.coords" options="marker.options" events="marker.events" idkey="marker.id" ng-repeat="marker in markers">
               </ui-gmap-marker>
 
-    		    </ui-gmap-google-map>
-    		<br>
+            </ui-gmap-google-map>
+        <br>
 
         <form class="form-inline">
           <div class="form-group">
@@ -32,9 +30,29 @@
         </form>
         
         <br>
-    		<button type="button" class="btn btn-primary btn-block" ng-click="getCurrentLocation()"><span class="ion-navigate"></span> Current Position</button>
+        <button type="button" class="btn btn-primary btn-block" ng-click="getCurrentLocation()"><span class="ion-navigate"></span> Current Position</button>
         </div>
       </div>
     </div> <!-- /container -->
   <br>
+ <!--  <div class="colorboxEx justifylastrow">
+        <a href="http://lorempixel.com/150/200/cats/">
+            <img src="http://lorempixel.com/150/200/cats/" />
+        </a>
+        <a href="http://lorempixel.com/200/150/cats/">
+            <img src="http://lorempixel.com/200/150/cats/" />
+        </a>
+        <a href="http://lorempixel.com/200/150/cats/">
+            <img src="http://lorempixel.com/200/150/cats/" />
+        </a>
+        <a href="http://lorempixel.com/200/150/cats/">
+            <img src="http://lorempixel.com/200/150/cats/" />
+        </a>
+        <a href="http://lorempixel.com/150/200/cats/">
+            <img src="http://lorempixel.com/150/200/cats/" />
+        </a>
+        <a href="http://lorempixel.com/150/200/cats/">
+            <img src="http://lorempixel.com/150/200/cats/" />
+        </a>
+    </div> -->
 </body>

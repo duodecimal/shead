@@ -47,16 +47,17 @@ angular.module('myApp')
             click: function (marker, eventName, args) {
               var stringImg = "";
               for(var i = 0 ; i <  marker.assets.length ; i++){
-                stringImg += "<img style='padding:2px;width:150px;' src='"+marker.assets[i].imageDownloadURL+"'>";
+                stringImg +=  '<a href="'+marker.assets[i].imageDownloadURL+'"><img src="'+marker.assets[i].imageDownloadURL+'"></a>';
               }
               //console.log(stringImg);
               contentString = '<h4>'+marker.title+'</h4>'+
-                              '<br>'+stringImg+'<br>'+
+                              '<div class="colorboxEx justifylastrow" style="width:300px">'+
+                              stringImg+
+                              '</div>'+
                               '<b>Tags</b>: '+marker.tags+'<br>'+
                               '<b>Created</b>: '+marker.created+'<br>'+
                               '<b>Updated</b>: '+marker.updated;
                               
-              //console.log(marker.assets[0].imageDownloadURL);
               infowindow[marker.index].setContent(contentString);
               infowindow[marker.index].setOptions({maxWidth: 500});
               infowindow[marker.index].open(this.map, marker);
@@ -66,6 +67,28 @@ angular.module('myApp')
               });
 
               infowindow[marker.index].setZIndex(99);
+
+              $(document).ready(function() {
+                  $(".colorboxEx").each(function(i, el) {
+                      $(el).justifiedGallery({
+                          rel: 'gal' + i
+                      }).on('jg.complete', function() {
+                          $(this).find('a').colorbox({
+                              maxWidth: '80%',
+                              maxHeight: '80%',
+                              opacity: 0.8,
+                              transition: 'elastic',
+                              current: ''
+                          });
+                      });
+                  });
+
+                  $(".justifylastrow").justifiedGallery({
+                      lastRow: 'justify',
+                      rowHeight: 150,
+                      maxRowHeight: 150
+                  });
+              });
             }
           }
         };
@@ -112,5 +135,9 @@ angular.module('myApp')
       maximumAge: 0
     };
 
+    //////////////////////////////////////////////////////////////////////////
+    //Photo
+    //////////////////////////////////////////////////////////////////////////
+    
 
 });
