@@ -1,11 +1,15 @@
 angular.module('myApp')
 
-.controller('ctrlMap', function($scope, $http, $timeout, uiGmapGoogleMapApi){
+.controller('ctrlMap', function($scope, $http, $timeout, uiGmapGoogleMapApi, $state){
+
+  $scope.state = $state.current.name;
+  $scope.numNews;
   $scope.markers = [];
   $http.get('http://shead.cloudapp.net:3000/api/News')
   .success(function(dataNews, status, headers, config) {
     //console.log(data);
     createMarker(dataNews);
+    $scope.numNews = dataNews.length;
   })
   .error(function(data, status, headers, config) {
 

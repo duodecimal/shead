@@ -29,7 +29,8 @@
     "Justified-Gallery": "~3.5.4",
     "colorbox": "~1.6.1",
     "swipebox": "~1.2.9",
-    "angular-fix-image-orientation": "czarpino/angular-fix-image-orientation"
+    "angular-fix-image-orientation": "czarpino/angular-fix-image-orientation",
+    "social-feed": "~0.1.2"
   },
   "resolutions": {
     "angular": "1.3.0-rc.2",

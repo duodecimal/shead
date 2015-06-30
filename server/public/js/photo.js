@@ -1,12 +1,15 @@
 //inject angular file upload directives and services.
 angular.module('myApp')
 
-.controller('ctrlPhoto', function($scope, $http, $rootScope, $upload, $timeout, $interval, postDataFactory){
+.controller('ctrlPhoto', function($scope, $http, $rootScope, $upload, $timeout, $interval, postDataFactory, $state){
 	// Check that the browser supports the FileReader API.
 	if (!window.FileReader) {
 		document.write('<strong>Sorry, your web browser does not support the FileReader API.</strong>');
 		return;
 	}
+
+	$scope.state = $state.current.name;
+	$scope.numNews;
 
 	var dropZone = document.getElementById('drop-zone');
     var files = [];
@@ -507,6 +510,13 @@ angular.module('myApp')
 				addKeys: [32,13,9],
 			}
 		},max: 20, unique: true
+	});
+
+	$http.get('http://shead.cloudapp.net:3000/api/News')
+	.success(function(dataNews, status, headers, config) {
+		$scope.numNews = dataNews.length;
+	})
+		.error(function(data, status, headers, config) {
 	});
 
 });

@@ -1,0 +1,12 @@
+<ul class="nav nav-pills pull-right" role="tablist">
+  <li role="presentation" ng-class="{'active' : state == 'feeds'}">
+  <a ui-sref="feeds">Home <span class="badge">{{numNews}}</span></a></li>
+  <li role="presentation" ng-class="{'active' : state == 'map'}"><a ui-sref="map">Map</a></li>
+  <li role="presentation" ng-class="{'active' : state == 'photo'}"><a ui-sref="photo">Upload</a></li>
+</ul>
+
+<div class="page-header">
+  <h1 ng-if="state == 'feeds'"> News Feeds <small></small></h1>
+  <h1 ng-if="state == 'map'"> Map <small></small></h1>
+  <h1 ng-if="state == 'photo'"> Upload Photo <small></small></h1>
+</div>

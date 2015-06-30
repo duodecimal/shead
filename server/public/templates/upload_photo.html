@@ -1,11 +1,7 @@
-<body ng-controller="photoCtrl">
-  <br>
-  <div class="container col-xs-12 col-md-10 col-md-offset-1">
+<body>
+  <div header></div>
+  <div class="container col-xs-12 col-md-12">
       <div class="panel panel-default">
-        <div class="panel-heading">
-          <strong>Shead</strong><small>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</small>
-          <a ui-sref="map"><button type="button" class="btn btn-sm btn-primary pull-right" style="margin-top:-5px">Map</button></a>       
-        </div>
         <div class="panel-body">
           <form id="myForm"  class="form-horizontal" ng-submit="submitPhoto()">
           <div class="form-group">
@@ -82,7 +78,10 @@
             <div class="img-review">
               <span ng-repeat="(key, value) in listImgThumb" class="scale-fade">
                   <a ng-click="removeImg(key)">
-                    <img img-fix-orientation="value[0]" ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2]}">
+                    <img ng-src="{{value[0]}}" width="100px" ng-class="{'grayscale' : value[1] || value[2],
+                  'rotage90cw' : value[3] == 6,
+                  'rotage90ccw' : value[3] == 8,
+                  'rotage180' : value[3] == 3}">
                     <img ng-class="{'overlay_no_gps' : value[1],
                   'overlay_far' : value[2]}">
                   </a>
@@ -104,7 +103,6 @@
         </div>
       </div>
     </div> <!-- /container -->
-  <br>
 
 
 

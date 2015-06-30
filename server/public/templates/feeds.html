@@ -1,0 +1,30 @@
+<body>
+	<div header></div>
+	
+	<div class="panel panel-default bouncy-slide-right" ng-repeat="news in news">
+	  <div class="panel-heading">{{news.title}}</div>
+	  <div class="panel-body">
+	    <div class="media">
+		  <div class="media-left media-middle">
+		    <a href="#">
+		      <img class="media-object" ng-src="{{news.assets[0].imageDownloadURL}}" width="64px" height="64px">
+		    </a>
+		  </div>
+		  <div class="media-body">
+		    <h4 class="media-heading">Middle aligned media</h4>
+		    <b>Tags</b>: {{news.tags}} <br>
+            <b>Created</b>: {{news.created}} <br>
+            <b>Updated</b>: {{news.updated}} <br>
+		  </div>
+		</div>
+	  </div>
+	</div>
+
+	<nav>
+	  <ul class="pager">
+	    <li class="previous"><a href="#"><span aria-hidden="true">&larr;</span> Older</a></li>
+	    <li class="next"><a href="#">Newer <span aria-hidden="true">&rarr;</span></a></li>
+	  </ul>
+	</nav>
+
+</body>
